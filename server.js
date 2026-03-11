@@ -9,7 +9,7 @@ const swaggerDocument = require('./swagger.json');
 
 const exphbs = require('express-handlebars');
 
-const PORT = process.env.PORT || 1000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.engine('.hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}));
