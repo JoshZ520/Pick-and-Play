@@ -11,22 +11,17 @@ const allMovies = async (req, res, next) => {
 };
 
 const singleMovie = async (req, res, next) => {
-    console.log('Received ID:', req.params.id);
     if (!ObjectId.isValid(req.params.id)) {
-        console.log('Invalid ID format');
         return res.status(400).json({ error: "Must use a valid movie id" });
     }
     const movieId = new ObjectId(req.params.id);
-    console.log('Converted to ObjectId:', movieId);
     try {
         const lists = await getDb().collection('movies').find({ _id: movieId }).toArray();
-        console.log('Query result:', lists);
         if (!lists.length) {
             return res.status(404).json({ error: "Movie not found" });
         }
         res.status(200).json(lists[0]);
     } catch (error) {
-        console.error('Error in singleMovie:', error);
         res.status(500).json({ message: error.message });
     }
 };
