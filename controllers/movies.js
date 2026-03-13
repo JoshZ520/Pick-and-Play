@@ -14,7 +14,7 @@ const allMovies = async(req, res, next) => {
             res.status(200).json(lists);
         });
     } catch(err) {
-        res.status(500).json(result.err || 'Some error occured while getting the list of movies');
+        res.status(500).json(err.message || 'Some error occured while getting the list of movies');
     }
 };
 
@@ -52,7 +52,7 @@ const createNewMovie = async(req, res, next) => {
             title: req.body.title,
             genre: req.body.genre,
             rating: req.body.rating,
-            runtime: req.body.runTime,
+            runtime: req.body.runtime,
             description: req.body.description,
             imageURL: req.body.imageURL
         };
@@ -80,7 +80,7 @@ const updateMovie = async(req, res, next) => {
             title: req.body.title,
             genre: req.body.genre,
             rating: req.body.rating,
-            runTime: req.body.runTime,
+            runTime: req.body.runtime,
             description: req.body.description,
             imageURL: req.body.imageURL
         };
@@ -103,7 +103,7 @@ const deleteMovie = async(req, res, next) => {
         }
 
         const movieId = new ObjectId(req.params.id);
-        const result = await mongodb.getDB().collection('movies').deleteMovie({_id: movieId});
+        const result = await mongodb.getDB().collection('movies').deleteOne({_id: movieId});
         console.log(result);
         if (result.deletedCount > 0) {
             res.status(200).send();
