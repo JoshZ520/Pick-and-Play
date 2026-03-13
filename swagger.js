@@ -6,7 +6,7 @@ const doc = {
         description: 'Pick-and-Play API',
     },
     host: 'localhost:3000',
-    schemes: [http],
+    schemes: [http]
 };
 
 const outputFile = './swagger.json';

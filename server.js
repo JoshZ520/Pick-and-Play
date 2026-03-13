@@ -25,19 +25,16 @@ app
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
     })
-    .use(cors())
+    // .use(cors())
     //Fill in Render connection
     .use(cors({
-        origin: "https://<fill-in-here>.onrender.com",
+        origin: "https://pick-and-play-mic3.onrender.com",
         headers: ["Content-Type"],
         credentials: true,
     }))
     .use('/', require('./routes/index'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(PORT, () => {
-    console.log(`Server: http://localhost:${PORT}`);
-});
 
 /* ----Deals with MongoDB--------*/
 mongodb.initDb ((err, mongodb) => {
@@ -45,6 +42,6 @@ mongodb.initDb ((err, mongodb) => {
         console.log(err);
     } else {
         app.listen(PORT);
-        console.log(`Connected to Database and listening on port ${PORT}`);
+        console.log(`Connected to Database and Server: http://localhost:${PORT}`);
     }
 });
