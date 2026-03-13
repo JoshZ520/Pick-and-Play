@@ -2,10 +2,13 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path');
-/* ---Not yet created files for swagger
+const mongodb = require('./DB/connect');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+/* ---Not yet created files for swagger*/
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-*/
+
 
 const exphbs = require('express-handlebars');
 
@@ -16,11 +19,19 @@ app.engine('.hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
 app
-    // .use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocuments))
+    .use(bodyParser.json())
+    .use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     .use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
     })
+    .use(cors())
+    //Fill in Render connection
+    .use(cors({
+        origin: "https://<fill-in-here>.onrender.com",
+        headers: ["Content-Type"],
+        credentials: true,
+    }))
     .use('/', require('./routes/index'));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -28,7 +39,7 @@ app.listen(PORT, () => {
     console.log(`Server: http://localhost:${PORT}`);
 });
 
-/* ----Deals with MongoDB--------
+/* ----Deals with MongoDB--------*/
 mongodb.initDb ((err, mongodb) => {
     if (err) {
         console.log(err);
@@ -37,4 +48,3 @@ mongodb.initDb ((err, mongodb) => {
         console.log(`Connected to Database and listening on port ${PORT}`);
     }
 });
-*/

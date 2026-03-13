@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 
+router.use('/', require('./swagger'));
+router.use('/movies', require('./movies'));
 
-// router.use('/', require('./swagger'));
-// router.use('/movies', require('./movies'));
 //@desc     Login/Landing page
 //@route    GET /
 router.get('/', (req, res) => {

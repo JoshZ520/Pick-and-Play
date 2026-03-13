@@ -22,11 +22,14 @@
   },
   "homepage": "https://github.com/JoshZ520/Pick-and-Play#readme",
   "dependencies": {
+    "body-parser": "^2.2.2",
     "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-handlebars": "^8.0.6",
     "mongoose": "^9.2.3",
+    "swagger": "^0.7.5",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
