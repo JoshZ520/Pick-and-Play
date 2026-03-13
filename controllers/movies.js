@@ -1,9 +1,10 @@
+
 const mongodb = require('../DB/connect');
 const ObjectId = require('mongodb').ObjectId;
 
 const allMovies = async(req, res, next) => {
     try {
-        const result = await mongodb.getDB().collection('movies').find();
+        const result = await mongodb.getDb().collection('movies').find();
         result.toArray((err, lists) => {
             if (err) {
                 res.status(400).json({message:err});
@@ -57,7 +58,7 @@ const createNewMovie = async(req, res, next) => {
             imageURL: req.body.imageURL
         };
 
-        const result = await mongodb.getDB().collection('movies').insertOne(newMovie);
+        const result = await mongodb.getDb().collection('movies').insertOne(newMovie);
         if(result.acknowledged) {
             res.status(201).json(result);
             console.log('It worked!!!!');
@@ -80,11 +81,11 @@ const updateMovie = async(req, res, next) => {
             title: req.body.title,
             genre: req.body.genre,
             rating: req.body.rating,
-            runTime: req.body.runtime,
+            runtime: req.body.runtime,
             description: req.body.description,
             imageURL: req.body.imageURL
         };
-        const result = await mongodb.getDB().collection('movies').replaceOne({_id: movieId}, updateMovie);
+        const result = await mongodb.getDb().collection('movies').replaceOne({_id: movieId}, updateMovie);
         console.log(result);
         if (result.modifiedCount > 0) {
             res.status(204).send();
@@ -103,7 +104,7 @@ const deleteMovie = async(req, res, next) => {
         }
 
         const movieId = new ObjectId(req.params.id);
-        const result = await mongodb.getDB().collection('movies').deleteOne({_id: movieId});
+        const result = await mongodb.getDb().collection('movies').deleteOne({_id: movieId});
         console.log(result);
         if (result.deletedCount > 0) {
             res.status(200).send();
