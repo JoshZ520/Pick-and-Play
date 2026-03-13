@@ -5,15 +5,36 @@
     "description": "Pick-and-Play API",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "localhost:",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/movies/": {
       "get": {
-        "description": "Gets all the movies from MongoDB.",
+        "description": "",
         "produces": [
           "application/json"
         ],
@@ -21,8 +42,8 @@
           "200": {
             "description": "OK"
           },
-          "400" : {
-            "description": "Could not get list"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -30,7 +51,7 @@
         }
       },
       "post": {
-        "description": "Creates a new movie.",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -64,9 +85,6 @@
           "201": {
             "description": "Created"
           },
-          "412" : {
-            "description": "Validation Errors"
-          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -75,7 +93,7 @@
     },
     "/movies/{id}": {
       "get": {
-        "description": "Gets a specific movie from MongoDB",
+        "description": "",
         "produces": [
           "application/json"
         ],
@@ -91,8 +109,8 @@
           "200": {
             "description": "OK"
           },
-          "400" : {
-            "description": "Invalid Movie ID"
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -100,7 +118,7 @@
         }
       },
       "put": {
-        "description": "Updates a specific movie's information or movie review.",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -140,11 +158,8 @@
           "204": {
             "description": "No Content"
           },
-          "400" : {
-            "description": "Invalid ID"
-          },
-          "412" : {
-            "description": "Validation Errors"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -152,7 +167,7 @@
         }
       },
       "delete": {
-        "description": "Deletes a specific movie from MongoDB",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -165,8 +180,8 @@
           "200": {
             "description": "OK"
           },
-          "400" : {
-            "description": "Invalid ID"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"

@@ -9,10 +9,17 @@ const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
-
 const exphbs = require('express-handlebars');
 
 const PORT = process.env.PORT || 3000;
+
+// Dynamic Swagger host based on environment
+if (process.env.NODE_ENV === 'production') {
+    swaggerDocument.host = 'pick-and-play-mic3.onrender.com';
+    swaggerDocument.schemes = ['https'];
+} else {
+    swaggerDocument.host = `localhost:${PORT}`;
+}
 
 const app = express();
 app.engine('.hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}));
