@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.use('/', require('./swagger'));
 router.use('/movies', require('./movies'));
+router.use('/auth', require('./auth'));
 
 //@desc     Login/Landing page
 //@route    GET /
