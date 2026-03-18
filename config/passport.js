@@ -4,9 +4,8 @@ const bcrypt = require('bcrypt');
 const { getDb } = require('../DB/connect');
 const ObjectId = require('mongodb').ObjectId;
 
-// ============================================
 // STEP 1: Configure the Local Strategy
-// ============================================
+
 // This tells Passport HOW to authenticate users with username/password
 
 passport.use(new LocalStrategy(
@@ -48,9 +47,8 @@ passport.use(new LocalStrategy(
     }
 ));
 
-// ============================================
 // STEP 2: Serialize User (Save to Session)
-// ============================================
+
 // After successful login, this runs to decide what to store in the session cookie
 // We only store the user ID (not the whole user object) to keep cookies small
 
@@ -59,9 +57,8 @@ passport.serializeUser((user, done) => {
     done(null, user._id.toString());
 });
 
-// ============================================
 // STEP 3: Deserialize User (Load from Session)
-// ============================================
+
 // On every request, this runs to load the full user from the ID in the session
 
 passport.deserializeUser(async (id, done) => {

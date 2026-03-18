@@ -29,9 +29,8 @@ app.set('view engine', '.hbs');
 
 app
     .use(bodyParser.json())
-    // ============================================
     // Session Configuration
-    // ============================================
+   
     // This creates and manages session cookies for user authentication
     .use(session({
         secret: process.env.SESSION_SECRET || 'secret-key',  // Used to sign the session ID cookie
@@ -46,9 +45,7 @@ app
             sameSite: 'lax'               // CSRF protection
         }
     }))
-    // ============================================
     // Passport Initialization
-    // ============================================
     // Must come AFTER session middleware
     .use(passport.initialize())  // Initialize Passport
     .use(passport.session())     // Use Passport for session management
@@ -57,8 +54,6 @@ app
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
     })
-    // .use(cors())
-    //Fill in Render connection
     .use(cors({
         origin: "https://pick-and-play-mic3.onrender.com",
         headers: ["Content-Type"],
