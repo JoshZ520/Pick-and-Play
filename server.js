@@ -22,7 +22,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const app = express();
-app.engine('.hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}));
+app.engine('.hbs', exphbs.engine({
+    defaultLayout: 'mainLayout',
+    extname: '.hbs',
+    layoutsDir: path.join(__dirname, 'views/layouts'),
+    partialsDir: path.join(__dirname, 'views/partials')
+}));
 app.set('view engine', '.hbs');
 
 app
