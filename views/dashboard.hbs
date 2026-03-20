@@ -1,25 +1,25 @@
-<h1>Dashboard - Movie Collection</h1>
+<h1>Dashboard - Profile</h1>
 
 {{#if error}}
     <p class="error">{{error}}</p>
 {{/if}}
-
-{{#if movies}}
-    <div class="movies-grid">
-        {{#each movies}}
-            <div class="movie-card">
-                {{#if imageURL}}
-                    <img src="{{imageURL}}" alt="{{title}}" class="movie-image">
-                {{/if}}
-                <h2>{{title}}</h2>
-                <p><strong>Genre:</strong> {{genre}}</p>
-                <p><strong>Rating:</strong> {{rating}}</p>
-                <p><strong>Runtime:</strong> {{runtime}} minutes</p>
-                <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button>
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No movies available. <a href="/add-movie">Add a movie</a></p>
-{{/if}}
+{{!--  --}}
+{{!-- {{#if movies}} --}}
+    {{!-- <div class="movies-grid"> --}}
+        {{!-- {{#each movies}} --}}
+            {{!-- <div class="movie-card"> --}}
+                {{!-- {{#if imageURL}} --}}
+                    {{!-- <img src="{{imageURL}}" alt="{{title}}" class="movie-image"> --}}
+                {{!-- {{/if}} --}}
+                {{!-- <h2>{{title}}</h2> --}}
+                {{!-- <p><strong>Genre:</strong> {{genre}}</p> --}}
+                {{!-- <p><strong>Rating:</strong> {{rating}}</p> --}}
+                {{!-- <p><strong>Runtime:</strong> {{runtime}} minutes</p> --}}
+                {{!-- <p>{{description}}</p> --}}
+                {{!-- <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button> --}}
+            {{!-- </div> --}}
+        {{!-- {{/each}} --}}
+    {{!-- </div> --}}
+{{!-- {{else}} --}}
+    {{!-- <p>No movies available. <a href="/add-movie">Add a movie</a></p> --}}
+{{!-- {{/if}} --}}
