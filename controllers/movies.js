@@ -16,7 +16,7 @@ const singleMovie = async (req, res, next) => {
     }
     const movieId = new ObjectId(req.params.id);
     try {
-    const lists = await getDb().collection('movies').find({ _id: movieId }).toArray();
+        const lists = await getDb().collection('movies').find({ _id: movieId }).toArray();
         if (!lists.length) {
             return res.status(404).json({ error: "Movie not found" });
         }
