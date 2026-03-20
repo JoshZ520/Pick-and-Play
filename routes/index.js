@@ -8,14 +8,6 @@ router.use('/auth', require('./auth'));
 router.use('/groups', require('./groups'));
 router.use('/games', require('./games'));
 
-//@desc     Login/Landing page
-//@route    GET /
-router.get('/login', (req, res) => {
-    res.render('login', {
-        layout: 'mainLayout',
-    });
-})
-
 //@desc     Dashboard
 //@route    GET /dashboard
 router.get('/dashboard', async (req,res) => {

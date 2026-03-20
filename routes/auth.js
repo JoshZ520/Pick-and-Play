@@ -2,6 +2,13 @@ const router = require('express').Router();
 const userController = require('../controllers/users');
 const passport = require('passport');
 
+// Login page
+router.get('/login', (req, res) => {
+    res.render('login', {
+        layout: 'mainLayout',
+    });
+});
+
 // Register new user
 router.post('/register', 
     /* 
@@ -64,7 +71,7 @@ router.get('/google/callback',
     #swagger.responses[302] = { description: 'Redirect to dashboard on success or login on failure' }
     */
     passport.authenticate('google', { 
-        failureRedirect: '/login' 
+        failureRedirect: '/auth/login' 
     }),
     (req, res) => {
         // Successful authentication, redirect to dashboard
