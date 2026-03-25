@@ -1,9 +1,10 @@
-
-
+{{#if error}}
+    <p class="error">{{error}}</p>
+{{/if}}
 
 {{#if movies}}
     <div class="movies-grid">
-        <h1>Movie Activities</h1>
+        <h2>Movie Activities</h2>
         <p>See the latest groups and vote for your favorite activity!</p>
         {{#each movies}}
             <div class="movie-card">
@@ -26,7 +27,7 @@
 
 {{#if games}}
     <div class="games">
-        <h1>Game Activities</h1>
+        <h2>Game Activities</h2>
         <p>See the latest groups and vote for your favorite activity!</p>
         {{#each games}}
             <div class="game-card">
@@ -47,7 +48,18 @@
     <p>No games available yet. Check back soon!</p>
 {{/if}}
 
-
-{{#if error}}
-    <p class="error">{{error}}</p>
+{{#if groups}}
+    <div class="groups">
+        <h2>Group Activities</h2>
+        <p>See the groups and their winning votes!</p>
+        {{#each groups}}
+            <div class="group-card">
+                <h3>{{groupName}}</h3>
+                <p><strong>Winning Vote:</strong> {{winVote}}</p>
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <p>No groups available yet. Check back soon!</p>
 {{/if}}
+

@@ -14,7 +14,7 @@
   "paths": {
     "/dashboard": {
       "get": {
-        "description": "",
+        "description": "Pick-and-Play API",
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -24,7 +24,7 @@
     },
     "/": {
       "get": {
-        "description": "",
+        "description": "Get all movies",
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -34,7 +34,7 @@
     },
     "/movies/": {
       "post": {
-        "description": "",
+        "description": "Create a new movie",
         "parameters": [
           {
             "name": "body",
@@ -80,7 +80,15 @@
         }
       },
       "get": {
-        "description": "",
+        "description": "Get a movie by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -93,7 +101,7 @@
     },
     "/movies/{id}": {
       "put": {
-        "description": "",
+        "description": "Update a movie by ID",
         "parameters": [
           {
             "name": "id",
@@ -151,7 +159,7 @@
         }
       },
       "delete": {
-        "description": "",
+        "description": "Delete a movie by ID",
         "parameters": [
           {
             "name": "id",
@@ -341,7 +349,7 @@
     },
     "/groups/": {
       "get": {
-        "description": "",
+        "description": "Get all groups",
         "responses": {
           "200": {
             "description": "OK"
@@ -352,7 +360,7 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Create a new group",
         "parameters": [
           {
             "name": "body",
@@ -382,7 +390,7 @@
     },
     "/groups/{id}": {
       "get": {
-        "description": "",
+        "description": "Get a group by ID",
         "parameters": [
           {
             "name": "id",
@@ -407,7 +415,7 @@
         }
       },
       "put": {
-        "description": "",
+        "description": "Update a group by ID",
         "parameters": [
           {
             "name": "id",
@@ -447,7 +455,7 @@
         }
       },
       "delete": {
-        "description": "",
+        "description": "Delete a group by ID",
         "parameters": [
           {
             "name": "id",
@@ -474,7 +482,7 @@
     },
     "/games/": {
       "get": {
-        "description": "",
+        "description": "Get all games",
         "responses": {
           "200": {
             "description": "OK"
@@ -485,7 +493,7 @@
         }
       },
       "post": {
-        "description": "",
+        "description": "Create a new game",
         "parameters": [
           {
             "name": "body",
@@ -530,7 +538,7 @@
     },
     "/games/{id}": {
       "get": {
-        "description": "",
+        "description": "Get a game by ID",
         "parameters": [
           {
             "name": "id",
@@ -555,7 +563,7 @@
         }
       },
       "put": {
-        "description": "",
+        "description": "Update a game by ID",
         "parameters": [
           {
             "name": "id",
@@ -610,7 +618,7 @@
         }
       },
       "delete": {
-        "description": "",
+        "description": "Delete a game by ID",
         "parameters": [
           {
             "name": "id",
@@ -631,6 +639,104 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "User registration",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User registration",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "testuser"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test@example.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "User login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User login credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "testuser"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "description": "User logout",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "description": "Get current user details",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
