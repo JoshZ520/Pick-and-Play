@@ -41,7 +41,7 @@ const createGame = async (req, res, next) => {
         };
 
         const result = await getDb().collection('games').insertOne(newGame);
-        if (result.acknowledge) {
+        if (result.acknowledged) {
             res.status(201).json(result);
         } else {
             res.status(500).json({ message: 'Some error occurred while creating the game' });

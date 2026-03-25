@@ -363,16 +363,7 @@
                 "groupName": {
                   "example": "any"
                 },
-                "userNames": {
-                  "example": "any"
-                },
-                "votes": {
-                  "example": "any"
-                },
                 "winVote": {
-                  "example": "any"
-                },
-                "userId": {
                   "example": "any"
                 }
               }
@@ -433,16 +424,7 @@
                 "groupName": {
                   "example": "any"
                 },
-                "userNames": {
-                  "example": "any"
-                },
-                "votes": {
-                  "example": "any"
-                },
                 "winVote": {
-                  "example": "any"
-                },
-                "userId": {
                   "example": "any"
                 }
               }

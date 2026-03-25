@@ -32,14 +32,11 @@ const createGroup = async (req, res, next) => {
     try {
         const newGroup = {
             groupName: req.body.groupName,
-            userNames: req.body.userNames,
-            votes: req.body.votes,
             winVote: req.body.winVote,
-            userId: req.body.userId
         };
 
         const result = await getDb().collection('groups').insertOne(newGroup);
-        if (result.acknowledge) {
+        if (result.acknowledged) {
             res.status(201).json(result);
         } else {
             res.status(500).json({ message: 'Some error occurred while creating the group' });
@@ -58,10 +55,7 @@ const updateGroup = async (req, res, next) => {
     try {
         const updateGroup = {
             groupName: req.body.groupName,
-            userNames: req.body.userNames,
-            votes: req.body.votes,
             winVote: req.body.winVote,
-            userId: req.body.userId
         }
         const result = await getDb().collection('groups').replaceOne({ _id: groupId}, updateGroup);
         if (result.modifiedCount > 0) {
