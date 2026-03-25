@@ -1,0 +1,103 @@
+{{#if error}}
+    <div class="flash-error"><p class="error">{{error}}</p></div>
+{{/if}}
+
+<div class="register-section">
+    <h2>Register</h2>
+
+    <form id="registerForm" method="POST" action="/auth/register" novalidate>
+        <div class="form-group">
+            <label for="username">Username: </label>
+            <input id="username" name="username" type="text" placeholder="Enter your username" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email: </label>
+            <input id="email" name="email" type="email" placeholder="Enter your email" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password: </label>
+            <input id="password" name="password" type="password" placeholder="Enter your password" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password: </label>
+            <input id="confirm-password" name="confirmPassword" type="password" placeholder="Confirm your password" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <ul class="password-requirements">
+            <li id="req-length" class="invalid">At least 12 characters</li>
+            <li id="req-number" class="invalid">Contains a number</li>
+            <li id="req-special" class="invalid">Contains a special character (!@#$%^&*)</li>
+            <li id="req-match" class="invalid">Passwords must match</li>
+        </ul>
+
+        <div class="divider-placeholder"></div>
+        <button class="register-btn" type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="/login">Log in here</a></p>
+    <p>Or register with:</p>
+    <a href="#" class="btn red darken-1">
+        <i class="fab fa-google left"></i> Log In With Google
+    </a>
+</div>
+
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const reqLength = document.getElementById('req-length');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+
+    function updatePasswordRequirements(value) {
+        reqLength.className = value.length >= 12 ? 'valid' : 'invalid';
+        reqNumber.className = /\d/.test(value) ? 'valid' : 'invalid';
+        reqSpecial.className = /[!@#$%^&*(),.?"{}|<>]/.test(value) ? 'valid' : 'invalid';
+    }
+
+    passwordInput.addEventListener('input', (e) => {
+        updatePasswordRequirements(e.target.value);
+    });
+
+    registerForm.addEventListener('submit', function(event) {
+        const usernameValue = usernameInput.value.trim();
+        const emailValue = emailInput.value.trim();
+        const passwordValue = passwordInput.value;
+        const confirmPasswordValue = confirmPasswordInput.value;
+
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+        const lengthValid = passwordValue.length >= 12;
+        const numberValid = /\d/.test(passwordValue);
+        const specialValid = /[!@#$%^&*(),.?"{}|<>]/.test(passwordValue);
+        const passwordsMatch = passwordValue === confirmPasswordValue;
+
+        const messages = [];
+
+        if (!usernameValue) messages.push('Username is required.');
+        if (!emailValid) messages.push('Please enter a valid email address.');
+        if (!lengthValid) messages.push('Password must be at least 12 characters.');
+        if (!numberValid) messages.push('Password must contain at least one number.');
+        if (!specialValid) messages.push('Password must contain at least one special character.');
+        if (!passwordsMatch) messages.push('Passwords do not match.');
+
+        if (messages.length) {
+            event.preventDefault();
+            let flash = document.querySelector('.flash-error');
+            if (!flash) {
+                flash = document.createElement('div');
+                flash.className = 'flash-error';
+                registerForm.parentNode.insertBefore(flash, registerForm);
+            }
+            flash.innerHTML = '<p class="error">' + messages.join(' ') + '</p>';
+        }
+    });
+</script>
