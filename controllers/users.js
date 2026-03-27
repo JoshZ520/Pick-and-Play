@@ -33,9 +33,16 @@ const register = async (req, res) => {
     const result = await getDb().collection('users').insertOne(newUser);
 
         if (result.acknowledged) {
-            res.status(201).json({
-                message: 'User registered successfully',
-                userId: result.insertedId
+            // Add the inserted ID to the user object
+            newUser._id = result.insertedId;
+            
+            // Automatically log the user in after registration
+            req.login(newUser, (err) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Registration successful but login failed' });
+                }
+                // Redirect to dashboard after successful login
+                res.redirect('/dashboard');
             });
         } else {
             res.status(500).json({ error: 'Failed to register'});

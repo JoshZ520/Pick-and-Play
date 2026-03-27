@@ -1,3 +1,36 @@
+### AUTH ENDPOINTS ###
+
+### Create Test User
+GET http://localhost:3000/auth/create-test-user
+
+### Register New User
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "email": "newuser@test.com",
+    "password": "Password123!"
+}
+
+### Login (redirects to dashboard on success)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "Password123!"
+}
+
+### Logout
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+
+### Get Current User
+GET http://localhost:3000/auth/me
+
+### RESOURCE ENDPOINTS ###
+
 ### 
 GET http://localhost:3000/movies
 
