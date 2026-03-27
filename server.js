@@ -34,6 +34,7 @@ app.set('view engine', '.hbs');
 
 app
     .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))  // Parse form data
     // Session Configuration
    
     // This creates and manages session cookies for user authentication

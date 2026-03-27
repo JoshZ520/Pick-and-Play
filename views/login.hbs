@@ -19,12 +19,6 @@
             <small class="validation-msg"></small>
         </div>
 
-        <ul class="password-requirements">
-            <li id="req-length" class="invalid">At least 12 characters</li>
-            <li id="req-number" class="invalid">Contains a number</li>
-            <li id="req-special" class="invalid">Contains a special character (!@#$%^&*)</li>
-        </ul>
-
         <button class="login-btn" type="submit">Login</button>
     </form>
 
@@ -39,35 +33,22 @@
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
-    const reqLength = document.getElementById('req-length');
-    const reqNumber = document.getElementById('req-number');
-    const reqSpecial = document.getElementById('req-special');
-
-    function updatePasswordRequirements(value) {
-        reqLength.className = value.length >= 12 ? 'valid' : 'invalid';
-        reqNumber.className = /\d/.test(value) ? 'valid' : 'invalid';
-        reqSpecial.className = /[!@#$%^&*(),.?"{}|<>]/.test(value) ? 'valid' : 'invalid';
-    }
-
-    passwordInput.addEventListener('input', (e) => {
-        updatePasswordRequirements(e.target.value);
-    });
 
     loginForm.addEventListener('submit', function(event) {
         const emailValue = emailInput.value.trim();
         const passwordValue = passwordInput.value;
 
-        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
-        const lengthValid = passwordValue.length >= 12;
-        const numberValid = /\d/.test(passwordValue);
-        const specialValid = /[!@#$%^&*(),.?"{}|<>]/.test(passwordValue);
-
         const messages = [];
 
-        if (!emailValid) messages.push('Please enter a valid email address.');
-        if (!lengthValid) messages.push('Password must be at least 12 characters.');
-        if (!numberValid) messages.push('Password must contain at least one number.');
-        if (!specialValid) messages.push('Password must contain at least one special character.');
+        if (!emailValue) {
+            messages.push('Email is required.');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+            messages.push('Please enter a valid email address.');
+        }
+
+        if (!passwordValue) {
+            messages.push('Password is required.');
+        }
 
         if (messages.length) {
             event.preventDefault();
