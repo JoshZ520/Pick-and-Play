@@ -1,11 +1,64 @@
-<h3><i class="fas fa-book-reader"></i>Pick-and-Play</h3>
-<div class="section">
-    <p class="lead">Choose an Activity</p>
-</div>
-<div class="divider"></div>
-<div class="section">
-    <a href="/auth/google" class="btn red darken-1">
+{{!-- <h1><i class="fas fa-book-reader"></i>Pick & Play</h1> --}}
+{{#if error}}
+    <div class="flash-error"><p class="error">{{error}}</p></div>
+{{/if}}
+
+<div class="login-section">
+    <h2>Login</h2>
+
+    <form id="loginForm" method="POST" action="/auth/login" novalidate>
+        <div class="form-group">
+            <label for="email">Email: </label>
+            <input id="email" name="email" type="email" placeholder="Enter your email" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password: </label>
+            <input id="password" name="password" type="password" placeholder="Enter your password" required>
+            <small class="validation-msg"></small>
+        </div>
+
+        <button class="login-btn" type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="/register">Register here</a></p>
+    <p>Or log in with:</p>
+    <a class="btn red darken-1" href="/auth/google">
         <i class="fab fa-google left"></i> Log In With Google
     </a>
-    <a href="/register" class="register-btn">-Bob wants to Register</a>
 </div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    loginForm.addEventListener('submit', function(event) {
+        const emailValue = emailInput.value.trim();
+        const passwordValue = passwordInput.value;
+
+        const messages = [];
+
+        if (!emailValue) {
+            messages.push('Email is required.');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+            messages.push('Please enter a valid email address.');
+        }
+
+        if (!passwordValue) {
+            messages.push('Password is required.');
+        }
+
+        if (messages.length) {
+            event.preventDefault();
+            let flash = document.querySelector('.flash-error');
+            if (!flash) {
+                flash = document.createElement('div');
+                flash.className = 'flash-error';
+                loginForm.parentNode.insertBefore(flash, loginForm);
+            }
+            flash.innerHTML = '<p class="error">' + messages.join(' ') + '</p>';
+        }
+    });
+</script>
