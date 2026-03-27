@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../DB/connect');
+const { isAuthenticated } = require('../middleware/auth');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
@@ -27,7 +28,7 @@ router.get('/register', (req, res) => {
 
 //@desc     Dashboard
 //@route    GET /dashboard
-router.get('/dashboard', async (req,res) => {
+router.get('/dashboard', isAuthenticated, async (req,res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();

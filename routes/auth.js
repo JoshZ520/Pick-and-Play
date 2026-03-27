@@ -2,13 +2,6 @@ const router = require('express').Router();
 const userController = require('../controllers/users');
 const passport = require('passport');
 
-// Login page
-router.get('/login', (req, res) => {
-    res.render('login', {
-        layout: 'mainLayout',
-    });
-});
-
 // Register new user
 router.post('/register', 
     /* 
