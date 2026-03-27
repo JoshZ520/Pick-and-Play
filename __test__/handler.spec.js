@@ -32,7 +32,7 @@ describe('Test routes', () => {
         //     collection: jest.fn().mockReturnThis(),
         //     find: jest.fn().mockReturnThis(), 
         //     params: { id: id },
-        //     toArray: jest.fn().mockResolvedValue([{ title: 'Movie 1' }])
+        //     toArray: jest.fn().mockResolvedValue([{ title: 'any' }])
         // });
         // const res = {
         //     status: jest.fn().mockReturnThis(),
