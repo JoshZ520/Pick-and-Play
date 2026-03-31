@@ -33,6 +33,7 @@ const createGroup = async (req, res, next) => {
         const newGroup = {
             groupName: req.body.groupName,
             winVote: req.body.winVote,
+            members: [],
         };
 
         const result = await getDb().collection('groups').insertOne(newGroup);
@@ -53,11 +54,11 @@ const updateGroup = async (req, res, next) => {
 
     const groupId = new ObjectId(req.params.id);
     try {
-        const updateGroup = {
+        const groupUpdates = {
             groupName: req.body.groupName,
             winVote: req.body.winVote,
-        }
-        const result = await getDb().collection('groups').replaceOne({ _id: groupId}, updateGroup);
+        };
+        const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
         if (result.modifiedCount > 0) {
             res.status(204).send();
         } else {
@@ -87,10 +88,39 @@ const deleteGroup = async (req, res, next) => {
     }
 };
 
+const joinGroup = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    const groupId = new ObjectId(req.params.id);
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    try {
+        const result = await getDb().collection('groups').updateOne(
+            { _id: groupId },
+            { $addToSet: { members: userId } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        return res.status(200).json({ message: 'Joined group successfully' });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 module.exports = {
     allGroups,
     singleGroup,
     createGroup,
     updateGroup,
-    deleteGroup
+    deleteGroup,
+    joinGroup
 }

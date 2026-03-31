@@ -33,7 +33,8 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();
         const groups = await getDb().collection('groups').find().toArray();
-        res.render('dashboard', { movies, games, groups });
+        const isAdmin = req.user && req.user.roleID === 2;
+        res.render('dashboard', { movies, games, groups, isAdmin });
     } catch (err) {
         res.status(500).render('dashboard', { error: 'Failed to load activities' });
     }

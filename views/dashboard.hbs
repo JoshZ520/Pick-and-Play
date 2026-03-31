@@ -4,6 +4,22 @@
 
 <h1>Dashboard - Profile</h1>
 
+{{#if isAdmin}}
+    <section class="admin-group-create">
+        <h2>Admin: Create Group</h2>
+        <form id="create-group-form">
+            <label for="groupName">Group Name</label>
+            <input id="groupName" name="groupName" type="text" required>
+
+            <label for="winVote">Initial Winning Vote</label>
+            <input id="winVote" name="winVote" type="text" placeholder="Optional">
+
+            <button type="submit" class="pick-btn">Create Group</button>
+        </form>
+        <p id="create-group-feedback"></p>
+    </section>
+{{/if}}
+
 {{#if movies}}
     <div class="movies-grid">
         <h1>Movie Activities</h1>
