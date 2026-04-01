@@ -32,7 +32,12 @@ router.get('/dashboard', async (req,res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();
-        const groups = await getDb().collection('groups').find().toArray();
+        let groups = await getDb().collection('groups').find().toArray();
+        groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
+            ...g,
+            groupName: g.groupName.trim(),
+            winVote: g.winVote ?? 0
+        }));
         res.render('dashboard', { movies, games, groups });
     } catch (err) {
         res.status(500).render('dashboard', { error: 'Failed to load activities' });
@@ -54,7 +59,12 @@ router.get('/activities', async (req,res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();
-        const groups = await getDb().collection('groups').find().toArray();
+        let groups = await getDb().collection('groups').find().toArray();
+        groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
+            ...g,
+            groupName: g.groupName.trim(),
+            winVote: g.winVote ?? 0
+        }));
         res.render('activities', { movies, games, groups });
     } catch (err) {
         res.status(500).render('activities', { error: 'Failed to load activities' });
