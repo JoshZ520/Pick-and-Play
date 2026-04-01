@@ -1,5 +1,4 @@
 // Code for the server app here
-test
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path');
 const mongodb = require('./DB/connect');
