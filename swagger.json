@@ -62,16 +62,6 @@
         }
       }
     },
-    "/api-docs": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/movies/": {
       "post": {
         "description": "",
@@ -247,6 +237,45 @@
         }
       }
     },
+    "/auth/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User login credentials",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "testuser"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password123"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/auth/register": {
       "post": {
         "description": "",
@@ -288,37 +317,6 @@
         }
       }
     },
-    "/auth/login": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "User login credentials",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "example": "testuser"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password123"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/auth/logout": {
       "post": {
         "description": "",
@@ -341,6 +339,32 @@
           },
           "401": {
             "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Initiate Google OAuth login - redirects to Google login page",
+        "responses": {
+          "302": {
+            "description": "Redirect to Google OAuth"
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Google OAuth callback - handles response from Google",
+        "responses": {
+          "302": {
+            "description": "Redirect to dashboard on success or login on failure"
           }
         }
       }
@@ -370,16 +394,16 @@
                   "example": "any"
                 },
                 "votes": {
-                  "example": 0
+                  "example": "any"
                 },
                 "winVote": {
-                  "example": 0
+                  "example": "any"
                 },
-                "members": {
-                  "example": []
+                "membersID": {
+                  "example": "any"
                 },
-                "activities": {
-                  "example": []
+                "activitiesID": {
+                  "example": "any"
                 }
               }
             }
@@ -440,16 +464,16 @@
                   "example": "any"
                 },
                 "votes": {
-                  "example": 0
+                  "example": "any"
                 },
                 "winVote": {
-                  "example": 0
+                  "example": "any"
                 },
                 "members": {
-                  "example": []
+                  "example": "any"
                 },
                 "activities": {
-                  "example": []
+                  "example": "any"
                 }
               }
             }
@@ -505,6 +529,25 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/groups/deleteGroupBtn": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
