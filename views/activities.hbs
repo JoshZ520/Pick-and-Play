@@ -2,6 +2,81 @@
     <p class="error">{{error}}</p>
 {{/if}}
 
+<h1>Activities</h1>
+
+{{!-- + 1 Button to vote test to a variable to change for let --}}  
+<p id="votes-display">Votes: 0 / 7</p>
+<button id="add-btn" class="btn">Add 1</button>
+
+<script>
+let votes = 0;
+const display = document.getElementById('votes-display');
+const btn = document.getElementById('add-btn');
+btn.addEventListener('click', () => {
+  votes += 1;
+  display.textContent = `Votes: ${votes} / 7`;
+});
+</script>
+
+{{#if groups}}
+    <div class="groups">
+        <h2>Group Activities</h2>
+        <p>See the groups and their winning votes!</p>
+        {{!-- Create Group Modal --}}
+        <button class="btn" onclick="openCreateGroupModal()" id="createGroupBtn">Create a Group</button>
+        <!-- Create Group Window Modal -->
+        <div id="createGroupModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+          <div class="modal-content" style="background:white; margin:15% auto; padding:20px; border-radius:8px; width:80%; max-width:500px;">
+            <span class="close" onclick="closeCreateGroupModal()" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">×</span>
+            <h2>Create New Group</h2>
+            <form id="createGroupForm">
+              <div class="form-group">
+                <label for="groupName">Group Name:</label>
+                <input type="text" id="groupName" name="groupName" required style="width:100%; padding:8px; margin:5px 0;">
+              </div>
+
+              <button type="submit" class="btn" style="background:#007bff; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer;">Create Group</button>
+            </form>
+            <p id="formError" style="color:red; display:none;"></p>
+          </div>
+        </div>
+        <!-- Delete Group Window Modal -->
+        <button class="btn" onclick="openDeleteGroupModal()">Delete a Group</button>
+        <div id="deleteGroupModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+          <div class="modal-content" style="background:white; margin:15% auto; padding:20px; border-radius:8px; width:80%; max-width:500px;">
+            <span class="close" onclick="closeDeleteGroupModal()" style="color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer;">×</span>
+            <h2>Delete Group</h2>
+            <form id="deleteGroupForm">
+              <div class="form-group">
+                <label for="groupSelect">Select Group to Delete:</label>
+                <select id="groupSelect" name="groupId" required style="width:100%; padding:8px; margin:5px 0;">
+                  {{#each groups}}
+                    {{#if this.groupName}}
+                      <option value="{{this._id}}">{{this.groupName}}</option>
+                    {{/if}}
+                  {{/each}}
+                </select>
+              </div>
+              <button type="submit" class="btn" style="background:#dc3545; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer;">Delete Group</button>
+            </form>
+            <p id="deleteFormError" style="color:red; display:none;"></p>
+          </div>
+        </div>
+        {{#each groups}}
+            {{#if this}}
+            <div class="group-card">
+                <h3>{{#if this.groupName}}{{this.groupName}}{{else}}Unnamed Group{{/if}}</h3>
+                <p>Votes: {{this.votes}} / {{this.winVote}}</p>
+                <button class="btn">Add Activity</button>
+                {{!-- <button class="btn">Leave Group</button> --}}
+            </div>
+            {{/if}}
+        {{/each}}
+    </div>
+{{else}}
+    <p>No groups available yet. Check back soon!</p>
+{{/if}}
+
 {{#if movies}}
     <div class="movies-grid">
         <h2>Movie Activities</h2>
@@ -23,7 +98,6 @@
 {{else}}
     <p>No movies available yet. Check back soon!</p>
 {{/if}}
-
 
 {{#if games}}
     <div class="games">
@@ -48,18 +122,118 @@
     <p>No games available yet. Check back soon!</p>
 {{/if}}
 
-{{#if groups}}
-    <div class="groups">
-        <h2>Group Activities</h2>
-        <p>See the groups and their winning votes!</p>
-        {{#each groups}}
-            <div class="group-card">
-                <h3>{{groupName}}</h3>
-                <p><strong>Winning Vote:</strong> {{winVote}}</p>
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No groups available yet. Check back soon!</p>
-{{/if}}
+<script>
+function openCreateGroupModal() {
+    document.getElementById('createGroupModal').style.display = 'block';
+}
 
+function closeCreateGroupModal() {
+    document.getElementById('createGroupModal').style.display = 'none';
+    document.getElementById('createGroupForm').reset();
+    document.getElementById('formError').style.display = 'none';
+}
+
+function openDeleteGroupModal() {
+    document.getElementById('deleteGroupModal').style.display = 'block';
+}
+
+function closeDeleteGroupModal() {
+    document.getElementById('deleteGroupModal').style.display = 'none';
+    document.getElementById('deleteGroupForm').reset();
+    document.getElementById('deleteFormError').style.display = 'none';
+}
+
+// Close modals on outside click
+window.onclick = function(event) {
+    const createModal = document.getElementById('createGroupModal');
+    const deleteModal = document.getElementById('deleteGroupModal');
+    if (event.target == createModal) {
+        closeCreateGroupModal();
+    }
+    if (event.target == deleteModal) {
+        closeDeleteGroupModal();
+    }
+}
+
+document.getElementById('createGroupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const groupNameEl = document.getElementById('groupName');
+    const groupName = groupNameEl.value.trim();
+    
+    if (!groupName) {
+        document.getElementById('formError').textContent = 'Group name is required.';
+        document.getElementById('formError').style.display = 'block';
+        return;
+    }
+    
+    const bodyData = new URLSearchParams();
+    bodyData.append('groupName', groupName);
+    
+    try {
+        console.log('Submitting groupName:', groupName);
+        const response = await fetch('/groups/btnCreateGroup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: bodyData
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create group');
+        }
+        
+        const result = await response.json();
+        console.log('Group created:', result);
+        location.reload();
+        closeCreateGroupModal();
+    } catch (err) {
+        document.getElementById('formError').textContent = err.message;
+        document.getElementById('formError').style.display = 'block';
+        console.error('Create group error:', err);
+    }
+});
+
+document.getElementById('deleteGroupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const groupSelectEl = document.getElementById('groupSelect');
+    const groupId = groupSelectEl.value;
+    
+    if (!groupId) {
+        document.getElementById('deleteFormError').textContent = 'Please select a group.';
+        document.getElementById('deleteFormError').style.display = 'block';
+        return;
+    }
+    
+    const bodyData = new URLSearchParams();
+    bodyData.append('groupId', groupId);
+    
+    try {
+        console.log('Submitting groupId to delete:', groupId);
+        const response = await fetch('/groups/deleteGroupBtn', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: bodyData
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to delete group');
+        }
+        
+        const result = await response.json();
+        console.log('Group deleted:', result);
+        location.reload();
+        closeDeleteGroupModal();
+    } catch (err) {
+        document.getElementById('deleteFormError').textContent = err.message;
+        document.getElementById('deleteFormError').style.display = 'block';
+        console.error('Delete group error:', err);
+    }
+});
+</script>

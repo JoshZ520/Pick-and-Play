@@ -4,6 +4,19 @@
 
 <h1>Dashboard - Profile</h1>
 
+{{!-- + 1 Button to vote test to a variable to change for let --}}
+<p id="votes-display">Votes: 0 / 7</p>
+<button id="add-btn" class="btn">Add 1</button>
+
+<script>
+let votes = 0;
+const display = document.getElementById('votes-display');
+const btn = document.getElementById('add-btn');
+btn.addEventListener('click', () => {
+  votes += 1;
+  display.textContent = `Votes: ${votes} / 7`;
+});
+</script>
 {{#if isAdmin}}
     <section class="admin-group-create">
         <h2>Admin: Create Group</h2>
@@ -22,7 +35,7 @@
 
 {{#if movies}}
     <div class="movies-grid">
-        <h1>Movie Activities</h1>
+        <h2>Movie Activities</h2>
         <p>See the latest groups and vote for your favorite activity!</p>
         {{#each movies}}
             <div class="movie-card">
@@ -45,7 +58,7 @@
 
 {{#if games}}
     <div class="games">
-        <h1>Game Activities</h1>
+        <h2>Game Activities</h2>
         <p>See the latest groups and vote for your favorite activity!</p>
         {{#each games}}
             <div class="game-card">
@@ -68,20 +81,16 @@
 
 {{#if groups}}
     <div class="groups">
-        <h1>Group Activities</h1>
+        <h2>Group Activities</h2>
         <p>See the groups and their winning votes!</p>
         {{#each groups}}
             <div class="group-card">
-                <h2>{{groupName}}</h2>
-                <p><strong>Winning Vote:</strong> {{winVote}}</p>
-                {{#if memberNames}}
-                    <p><strong>Members ({{memberNames.length}}):</strong>
-                        {{#each memberNames}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}
-                    </p>
-                {{else}}
-                    <p><strong>Members:</strong> None</p>
+                {{#if groupName}}
+                <h3>{{groupName}}</h3>
+                <p>Winning Vote: {{votes}} / {{winVote}}</p>
+                <button class="btn">Add Activity</button>
+                <button class="btn">Join Group</button>
                 {{/if}}
-                <button class="join-group-btn" data-id="{{_id}}">Join Group</button>
             </div>
         {{/each}}
     </div>

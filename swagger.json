@@ -384,6 +384,7 @@
         }
       },
       "post": {
+        "description": "",
         "tags": [
           "Groups"
         ],
@@ -401,7 +402,17 @@
                   "type": "string",
                   "example": "Friday Night Group"
                 },
+                "votes": {
+                  "example": "any"
+                },
                 "winVote": {
+                  "example": "any"
+                },
+                "membersID": {
+                  "example": "any"
+                },
+                "activitiesID": {
+                  "example": "any"
                   "type": "string",
                   "example": "None yet"
                 }
@@ -469,7 +480,16 @@
                 "groupName": {
                   "example": "any"
                 },
+                "votes": {
+                  "example": "any"
+                },
                 "winVote": {
+                  "example": "any"
+                },
+                "members": {
+                  "example": "any"
+                },
+                "activities": {
                   "example": "any"
                 }
               }
@@ -517,6 +537,28 @@
         }
       }
     },
+    "/groups/btnCreateGroup": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/groups/deleteGroupBtn": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
     "/groups/{id}/join": {
       "post": {
         "tags": [
@@ -537,9 +579,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "401": {
-            "description": "Not authenticated"
           },
           "404": {
             "description": "Not Found"
