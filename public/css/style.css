@@ -58,3 +58,73 @@ p {
     color: red;
     font-weight: bold;
 }
+
+body {
+    background-color: #FBF7F4;
+}
+
+header {
+    background-color: #6C9A8B;
+    padding: 10px;
+}
+
+.site-name a {
+    color: white;
+    font-weight: 700;
+    transition: .5s;
+    font-size: 2rem;
+}
+.site-name a:hover {
+    color: #EED2CC;
+}
+
+main {
+    background-color: white;
+    padding: .5rem 1rem;
+}
+
+html, body {
+    height: 100%;
+}
+
+.navbar {
+    background-color: Salmon;
+}
+
+footer {
+    background-color: #6C9A8B;
+    padding: .5rem 1rem;
+    color: white;
+}
+
+.admin-group-create {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+#create-group-form {
+    display: grid;
+    gap: 8px;
+    max-width: 400px;
+}
+
+#create-group-form input {
+    padding: 8px;
+}
+
+#create-group-feedback {
+    font-weight: 600;
+}
+/* Color palattes
+82A0C4 wisteria blue
+537A5A Fern green
+909590 grey olive
+
+6C9A8B Muted teal
+E8998D Sweet Salmon
+EED2CC Almond Silk
+FBF7F4 Parchment
+*/

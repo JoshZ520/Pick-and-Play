@@ -1,0 +1,282 @@
+### AUTH ENDPOINTS ###
+
+### Create Test User
+GET http://localhost:3000/auth/create-test-user
+
+### Register New User
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "email": "newuser@test.com",
+    "password": "Password123!"
+}
+
+### Login (redirects to dashboard on success)
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "Password123!"
+}
+
+### Logout
+POST http://localhost:3000/auth/logout
+Content-Type: application/json
+
+### Get Current User
+GET http://localhost:3000/auth/me
+
+### RESOURCE ENDPOINTS ###
+
+### 
+GET http://localhost:3000/movies
+
+###
+GET http://localhost:3000/users 
+
+###
+GET http://localhost:3000/games
+
+###
+GET http://localhost:3000/groups
+
+###
+GET http://localhost:3000/movies/69bb01ce4d28b1c27293baee
+
+###
+GET http://localhost:3000/users/
+
+###
+GET http://localhost:3000/games/69bb0aaae2d6c88e85e39272
+
+###
+GET http://localhost:3000/groups/69bd8e91cecd3b224ec80dbc
+
+###
+POST http://localhost:3000/localhost:3000/users HTTP/1.1
+content-type: application/json
+
+{
+
+}
+
+POST http://localhost:3000/localhost:3000/games HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Cover Your Assets",
+    "genre": "Table-top card game",
+    "playtime": "1h30m",
+    "minPlayers": "3",
+    "maxPlayers": "6",
+    "description": "Quite competitive. It's one against everyone.",
+    "imageURL": "3862dbje1"
+}
+
+POST http://localhost:3000/localhost:3000/groups HTTP/1.1
+content-type: application/json
+
+{
+    "groupName": "Batman Team",
+    "winVote": "4"
+}
+
+POST http://localhost:3000/localhost:3000/movies HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Toy Story",
+    "genre": "Children",
+    "rating": "G",
+    "runtime": "1h21m",
+    "description": "Toys that come to life and have a great adventure.",
+    "imageURL": "124hdvv0"
+}
+
+###
+PUT http://localhost:3000/localhost:3000/movies/69bb01ce4d28b1c27293baee
+
+{
+    "title": "She's The Man",
+    "genre": "Romantic Comedy",
+    "rating": "PG-13",
+    "runtime": "1h45m",
+    "description": "Shakespeare's Twelfth Night given a modern twist.",
+    "imageURL": "eruhnj23" 
+}
+
+PUT http://localhost:3000/localhost:3000/users/
+
+{
+
+}
+
+PUT http://localhost:3000/localhost:3000/games/69bb0aaae2d6c88e85e39272
+
+{
+    "title": "Jenga",
+    "genre": "Table top",
+    "playtime": "1h30",
+    "minPlayers": "2",
+    "maxPlayers": "6",
+    "description": "pretty fun game of building a tower and prevent it from tumbling down. Can be quite competitive.",
+    "imageURL": "345unsUo09" 
+}
+
+
+PUT http://localhost:3000/localhost:3000/groups/69bd8e91cecd3b224ec80dbc
+
+{
+    "groupName": "Clark Kent Team",
+    "winVote": "7"
+}
+
+###
+DELETE http://localhost:3000/localhost:3000/movies/69bb01ce4d28b1c27293baee
+
+###
+DELETE http://localhost:3000/localhost:3000/users/
+
+###
+DELETE http://localhost:3000/localhost:3000/groups/
+
+###
+DELETE http://localhost:3000/localhost:3000/games/
+
+
+
+### -------------- RENDER LINKS REST API ---------------------------
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/movies
+
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/users 
+
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/groups 
+
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/games 
+
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/movies/
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/users/
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/groups/69bd8e91cecd3b224ec80dbc
+
+###
+GET https://pick-and-play-mic3.onrender.com/3000/games/69bd9054cecd3b224ec80dbd
+
+
+###
+POST https://pick-and-play-mic3.onrender.com/3000/movies HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Toy Story",
+    "genre": "Children",
+    "rating": "G",
+    "runtime": "1h21m",
+    "description": "Toys that come to life and have a great adventure.",
+    "imageURL": "124hdvv0"
+}
+
+###
+POST https://pick-and-play-mic3.onrender.com/3000/users HTTP/1.1
+content-type: application/json
+
+{
+
+}
+
+###
+POST https://pick-and-play-mic3.onrender.com/3000/games HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Monopoly",
+    "genre": "Table-top game",
+    "playtime": "forever",
+    "minPlayers": "2",
+    "maxPlayers": "4",
+    "description": "Leave while you can or it will be too late!",
+    "imageURL": "fue73yyv2"
+}
+
+###
+POST https://pick-and-play-mic3.onrender.com/3000/groups HTTP/1.1
+content-type: application/json
+
+{
+    "groupName": "Wonder Woman Team",
+    "winVote": "8"
+}
+
+PUT https://pick-and-play-mic3.onrender.com/3000/movies/69bb01ce4d28b1c27293baee HTTP/1.1
+content-type: application/json
+
+{
+    "title": "She's The Man",
+    "genre": "Romantic Comedy",
+    "rating": "PG-13",
+    "runtime": "1h45m",
+    "description": "Shakespeare's Twelfth Night given a modern twist.",
+    "imageURL": "eruhnj23" 
+}
+
+
+###
+PUT https://pick-and-play-mic3.onrender.com/3000/users/ HTTP/1.1
+content-type: application/json
+
+{
+
+}
+
+###
+PUT https://pick-and-play-mic3.onrender.com/3000/games/69bb0aaae2d6c88e85e39272 HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Jenga",
+    "genre": "Table top",
+    "playtime": "1h45",
+    "minPlayers": "2",
+    "maxPlayers": "4",
+    "description": "Prevent tower from tumbling down",
+    "imageURL": "ttjns43287"
+}
+
+###
+PUT https://pick-and-play-mic3.onrender.com/3000/groups/69bd8e91cecd3b224ec80dbc HTTP/1.1
+content-type: application/json
+
+{
+    "groupName": "CK Team",
+    "winVote": "8"
+}
+
+
+
+###
+DELETE https://pick-and-play-mic3.onrender.com/3000/movies/
+
+###
+DELETE https://pick-and-play-mic3.onrender.com/3000/users/
+
+###
+DELETE https://pick-and-play-mic3.onrender.com/3000/groups/
+
+###
+DELETE https://pick-and-play-mic3.onrender.com/3000/games/
