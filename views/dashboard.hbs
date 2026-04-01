@@ -74,6 +74,14 @@
             <div class="group-card">
                 <h2>{{groupName}}</h2>
                 <p><strong>Winning Vote:</strong> {{winVote}}</p>
+                {{#if memberNames}}
+                    <p><strong>Members ({{memberNames.length}}):</strong>
+                        {{#each memberNames}}{{#unless @first}}, {{/unless}}{{this}}{{/each}}
+                    </p>
+                {{else}}
+                    <p><strong>Members:</strong> None</p>
+                {{/if}}
+                <button class="join-group-btn" data-id="{{_id}}">Join Group</button>
             </div>
         {{/each}}
     </div>
