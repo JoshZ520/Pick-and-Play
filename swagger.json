@@ -12,9 +12,29 @@
     "https"
   ],
   "paths": {
+    "/login": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/register": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/dashboard": {
       "get": {
-        "description": "Pick-and-Play API",
+        "description": "",
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -24,7 +44,17 @@
     },
     "/": {
       "get": {
-        "description": "Get all movies",
+        "description": "",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/activities": {
+      "get": {
+        "description": "",
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -34,7 +64,7 @@
     },
     "/movies/": {
       "post": {
-        "description": "Create a new movie",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -80,15 +110,7 @@
         }
       },
       "get": {
-        "description": "Get a movie by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -101,7 +123,7 @@
     },
     "/movies/{id}": {
       "put": {
-        "description": "Update a movie by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -159,7 +181,7 @@
         }
       },
       "delete": {
-        "description": "Delete a movie by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -349,7 +371,7 @@
     },
     "/groups/": {
       "get": {
-        "description": "Get all groups",
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -360,7 +382,7 @@
         }
       },
       "post": {
-        "description": "Create a new group",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -371,7 +393,16 @@
                 "groupName": {
                   "example": "any"
                 },
+                "votes": {
+                  "example": "any"
+                },
                 "winVote": {
+                  "example": "any"
+                },
+                "membersID": {
+                  "example": "any"
+                },
+                "activitiesID": {
                   "example": "any"
                 }
               }
@@ -390,7 +421,7 @@
     },
     "/groups/{id}": {
       "get": {
-        "description": "Get a group by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -415,7 +446,7 @@
         }
       },
       "put": {
-        "description": "Update a group by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -432,7 +463,16 @@
                 "groupName": {
                   "example": "any"
                 },
+                "votes": {
+                  "example": "any"
+                },
                 "winVote": {
+                  "example": "any"
+                },
+                "members": {
+                  "example": "any"
+                },
+                "activities": {
                   "example": "any"
                 }
               }
@@ -455,7 +495,7 @@
         }
       },
       "delete": {
-        "description": "Delete a group by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -480,9 +520,44 @@
         }
       }
     },
+    "/groups/btnCreateGroup": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/groups/deleteGroupBtn": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/games/": {
       "get": {
-        "description": "Get all games",
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -493,7 +568,7 @@
         }
       },
       "post": {
-        "description": "Create a new game",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -538,7 +613,7 @@
     },
     "/games/{id}": {
       "get": {
-        "description": "Get a game by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -563,7 +638,7 @@
         }
       },
       "put": {
-        "description": "Update a game by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -618,7 +693,7 @@
         }
       },
       "delete": {
-        "description": "Delete a game by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -639,104 +714,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/auth/register": {
-      "post": {
-        "description": "User registration",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "User registration",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "example": "testuser"
-                },
-                "email": {
-                  "type": "string",
-                  "example": "test@example.com"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password123"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "description": "User login",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "User login credentials",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "type": "string",
-                  "example": "testuser"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "password123"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "description": "User logout",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/auth/me": {
-      "get": {
-        "description": "Get current user details",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
         }
       }
