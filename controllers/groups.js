@@ -30,12 +30,20 @@ const singleGroup = async (req, res, next) => {
 
 const createGroup = async (req, res, next) => {
     try {
+        const groupName = req.body.groupName?.trim();
+        if (!groupName) {
+            return res.status(400).json({ message: 'Group name is required' });
+        }
+
+        const members = Array.isArray(req.body.members) ? req.body.members : [];
+        const activities = Array.isArray(req.body.activities) ? req.body.activities : [];
+
         const newGroup = {
-            groupName: req.body.groupName,
+            groupName,
             votes: req.body.votes || 0,  // Default to 0 if not provided
             winVote: req.body.winVote || 0,  // Default to 0 if not provided
-            membersID: req.body.membersID || [],  // Optional array of member IDs or names
-            activitiesID: req.body.activitiesID || []  // Optional array to store associated activities (movies/games)
+            members,
+            activities
         };
 
         const result = await getDb().collection('groups').insertOne(newGroup);
@@ -56,15 +64,23 @@ const updateGroup = async (req, res, next) => {
 
     const groupId = new ObjectId(req.params.id);
     try {
+        const members = Array.isArray(req.body.members) ? req.body.members : undefined;
+        const activities = Array.isArray(req.body.activities) ? req.body.activities : undefined;
+
         const groupUpdates = {
             groupName: req.body.groupName,
             votes: req.body.votes,
             winVote: req.body.winVote,
-            membersID: req.body.members,
-            activitiesID: req.body.activities
-        }
-        const result = await getDb().collection('groups').replaceOne({ _id: groupId}, updateGroup);
+            members,
+            activities
         };
+
+        Object.keys(groupUpdates).forEach((key) => {
+            if (groupUpdates[key] === undefined) {
+                delete groupUpdates[key];
+            }
+        });
+
         const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
         if (result.modifiedCount > 0) {
             res.status(204).send();
@@ -106,8 +122,8 @@ const btnCreateGroup = async (req, res, next) => {
             groupName: groupName,
             votes: 0,   // Per swagger schema
             winVote: 1,  // Per swagger schema
-            members: [],  // Per swagger schema
-            activities: [] // Optional array to store associated activities (movies/games)
+            members: [],
+            activities: []
         };
         const result = await getDb().collection('groups').insertOne(newGroup);
         if (result.acknowledged) {
@@ -141,6 +157,9 @@ const deleteBtnGroup = async (req, res, next) => {
     } catch (err) {
         console.error('Delete group error:', err);
         res.status(500).json({ message: err.message });
+    }
+};
+
 const joinGroup = async (req, res) => {
     if (!ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ error: 'Must use a valid group id' });
@@ -156,7 +175,11 @@ const joinGroup = async (req, res) => {
     try {
         const result = await getDb().collection('groups').updateOne(
             { _id: groupId },
-            { $addToSet: { members: userId } }
+            {
+                $addToSet: {
+                    members: userId
+                }
+            }
         );
 
         if (result.matchedCount === 0) {

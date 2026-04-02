@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const { getDb } = require('../DB/connect');
 const { isAuthenticated } = require('../middleware/auth');
-const { ObjectId } = require('mongodb');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
@@ -39,13 +38,13 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
             groupName: g.groupName.trim(),
             winVote: g.winVote ?? 0
         }));
-        res.render('dashboard', { movies, games, groups });
-        
+
         // Populate group members with user data
         groups = await Promise.all(groups.map(async (group) => {
-            if (group.members && group.members.length > 0) {
+            const memberIds = Array.isArray(group.members) ? group.members : [];
+            if (memberIds.length > 0) {
                 const membersList = await Promise.all(
-                    group.members.map(async (memberId) => {
+                    memberIds.map(async (memberId) => {
                         const user = await getDb().collection('users').findOne({ _id: memberId });
                         return user ? user.username : 'Unknown User';
                     })
