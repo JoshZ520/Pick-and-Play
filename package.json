@@ -45,4 +45,9 @@
     "nodemon": "^3.1.14",
     "swagger-autogen": "^2.23.7"
   }
+  ,
+  "jest": {
+    "preset": "@shelf/jest-mongodb",
+    "testEnvironment": "node"
+  }
 }
