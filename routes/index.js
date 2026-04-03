@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const { getDb } = require('../DB/connect');
 const { isAuthenticated } = require('../middleware/auth');
-const { ObjectId } = require('mongodb');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
@@ -14,7 +13,7 @@ router.use('/games', require('./games'));
 //@route    GET /
 router.get('/login', (req, res) => {
     res.render('login', {
-        layout: 'mainLayout',
+        layout: 'mainLayout'
     });
 })
 
@@ -22,7 +21,7 @@ router.get('/login', (req, res) => {
 //@route    GET /register
 router.get('/register', (req, res) => {
     res.render('register', {
-        layout: 'mainLayout',
+        layout: 'mainLayout'
     });
 })
 
@@ -39,26 +38,37 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
             groupName: g.groupName.trim(),
             winVote: g.winVote ?? 0
         }));
-        res.render('dashboard', { movies, games, groups });
-        
+
         // Populate group members with user data
         groups = await Promise.all(groups.map(async (group) => {
-            if (group.members && group.members.length > 0) {
-                const membersList = await Promise.all(
-                    group.members.map(async (memberId) => {
+            const memberIds = Array.isArray(group.members) ? group.members : [];
+            const groupAdminIdString = group.groupAdminId ? group.groupAdminId.toString() : null;
+            if (memberIds.length > 0) {
+                const memberDetails = await Promise.all(
+                    memberIds.map(async (memberId) => {
                         const user = await getDb().collection('users').findOne({ _id: memberId });
-                        return user ? user.username : 'Unknown User';
+                        const username = user ? user.username : 'Unknown User';
+                        const memberIdString = memberId ? memberId.toString() : '';
+                        return {
+                            username,
+                            isAdmin: Boolean(groupAdminIdString && memberIdString === groupAdminIdString)
+                        };
                     })
                 );
-                group.memberNames = membersList;
+                group.memberDetails = memberDetails;
             } else {
-                group.memberNames = [];
+                group.memberDetails = [];
             }
             return group;
         }));
+
+        const currentUserId = req.user?._id?.toString();
+        const myGroups = groups.filter((group) =>
+            Array.isArray(group.members) && group.members.some((memberId) => memberId?.toString() === currentUserId)
+        );
         
         const isAdmin = req.user && req.user.roleID === 2;
-        res.render('dashboard', { movies, games, groups, isAdmin });
+        res.render('dashboard', { movies, games, groups, myGroups, isAdmin });
     } catch (err) {
         res.status(500).render('dashboard', { error: 'Failed to load activities' });
     }
@@ -83,7 +93,13 @@ router.get('/activities', async (req,res) => {
         groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
             ...g,
             groupName: g.groupName.trim(),
-            winVote: g.winVote ?? 0
+            winVote: g.winVote ?? 0,
+            activities: Array.isArray(g.activities)
+                ? g.activities.map((activity) => ({
+                    ...activity,
+                    activityIdString: activity.activityId?.toString?.() || ''
+                }))
+                : []
         }));
         res.render('activities', { movies, games, groups });
     } catch (err) {

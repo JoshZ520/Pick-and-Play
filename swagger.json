@@ -384,6 +384,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Groups"
+        ],
         "description": "Create a new group (admin only)",
         "parameters": [
           {
@@ -398,18 +401,9 @@
                   "type": "string",
                   "example": "Friday Night Group"
                 },
-                "votes": {
-                  "example": "any"
-                },
                 "winVote": {
-                  "example": "any"
-                },
-                "membersID": {
-                  "example": "any"
-                },
-                "activitiesID": {
-                  "example": "any",
-                  "type": "string"
+                  "type": "string",
+                  "example": "None yet"
                 }
               }
             }
@@ -418,6 +412,9 @@
         "responses": {
           "201": {
             "description": "Group created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
             "description": "Unauthorized"
@@ -472,6 +469,18 @@
             "schema": {
               "type": "object",
               "properties": {
+                "members": {
+                  "example": "any"
+                },
+                "membersID": {
+                  "example": "any"
+                },
+                "activities": {
+                  "example": "any"
+                },
+                "activitiesID": {
+                  "example": "any"
+                },
                 "groupName": {
                   "example": "any"
                 },
@@ -479,12 +488,6 @@
                   "example": "any"
                 },
                 "winVote": {
-                  "example": "any"
-                },
-                "members": {
-                  "example": "any"
-                },
-                "activities": {
                   "example": "any"
                 }
               }
@@ -532,6 +535,39 @@
         }
       }
     },
+    "/groups/{id}/join": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Join a group as the currently logged-in user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Joined group successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/groups/btnCreateGroup": {
       "post": {
         "description": "",
@@ -554,33 +590,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/groups/{id}/join": {
-      "post": {
-        "tags": [
-          "Groups"
-        ],
-        "description": "Join a group as the currently logged-in user",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Joined group successfully"
           },
           "400": {
             "description": "Bad Request"
