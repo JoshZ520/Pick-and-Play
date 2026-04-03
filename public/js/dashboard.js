@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const votesDisplay = document.getElementById('votes-display');
     const addBtn = document.getElementById('add-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    const createGroupForm = document.getElementById('create-group-form');
-    const createGroupFeedback = document.getElementById('create-group-feedback');
     const joinGroupBtns = document.querySelectorAll('.join-group-btn');
     let votes = 0;
 
@@ -40,45 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (createGroupForm) {
-        createGroupForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(createGroupForm);
-            const groupName = formData.get('groupName');
-            const winVote = formData.get('winVote');
-
-            try {
-                const response = await fetch('/groups', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        groupName,
-                        winVote: winVote || 'None yet'
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || errorData.message || 'Failed to create group');
-                }
-
-                if (createGroupFeedback) {
-                    createGroupFeedback.textContent = 'Group created successfully.';
-                }
-
-                createGroupForm.reset();
-                window.location.reload();
-            } catch (err) {
-                if (createGroupFeedback) {
-                    createGroupFeedback.textContent = err.message;
-                }
-            }
-        });
-    }
-
     // Handle join group button clicks
     joinGroupBtns.forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -104,4 +63,5 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
 });
