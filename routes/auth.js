@@ -99,7 +99,7 @@ router.get('/google/callback',
     #swagger.responses[302] = { description: 'Redirect to dashboard on success or login on failure' }
     */
     passport.authenticate('google', { 
-        failureRedirect: '/auth/login' 
+        failureRedirect: '/login' 
     }),
     (req, res) => {
         // Successful authentication, redirect to dashboard
