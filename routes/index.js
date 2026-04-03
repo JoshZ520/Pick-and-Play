@@ -93,7 +93,13 @@ router.get('/activities', async (req,res) => {
         groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
             ...g,
             groupName: g.groupName.trim(),
-            winVote: g.winVote ?? 0
+            winVote: g.winVote ?? 0,
+            activities: Array.isArray(g.activities)
+                ? g.activities.map((activity) => ({
+                    ...activity,
+                    activityIdString: activity.activityId?.toString?.() || ''
+                }))
+                : []
         }));
         res.render('activities', { movies, games, groups });
     } catch (err) {

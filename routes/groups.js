@@ -48,6 +48,27 @@ router.post('/:id/join',
 	groupController.joinGroup
 );
 
+// Add a movie or game to a group
+router.post('/:id/activities',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Add a movie or game to a group'
+	#swagger.parameters['body'] = {
+		in: 'body',
+		description: 'Activity payload',
+		required: true,
+		schema: {
+			activityType: 'movie',
+			activityId: '507f1f77bcf86cd799439011'
+		}
+	}
+	*/
+	groupController.addActivityToGroup
+);
+
+// Remove a movie or game from a group
+router.delete('/:id/activities/:activityType/:activityId', groupController.removeActivityFromGroup);
+
 //Updates group
 router.put('/:id', groupController.updateGroup);
 
