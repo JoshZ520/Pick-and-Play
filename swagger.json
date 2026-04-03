@@ -387,7 +387,7 @@
         "tags": [
           "Groups"
         ],
-        "description": "Create a new group (admin only)",
+        "description": "Create a new group",
         "parameters": [
           {
             "name": "body",
@@ -404,6 +404,22 @@
                 "winVote": {
                   "type": "string",
                   "example": "None yet"
+                },
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "activityType": {
+                        "type": "string",
+                        "example": "game"
+                      },
+                      "activityId": {
+                        "type": "string",
+                        "example": "507f1f77bcf86cd799439012"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -415,12 +431,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Admin access required"
           },
           "500": {
             "description": "Internal Server Error"
@@ -472,13 +482,7 @@
                 "members": {
                   "example": "any"
                 },
-                "membersID": {
-                  "example": "any"
-                },
                 "activities": {
-                  "example": "any"
-                },
-                "activitiesID": {
                   "example": "any"
                 },
                 "groupName": {
@@ -568,25 +572,39 @@
         }
       }
     },
-    "/groups/btnCreateGroup": {
+    "/groups/{id}/activities": {
       "post": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
+        "tags": [
+          "Groups"
+        ],
+        "description": "Add a movie or game to a group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Activity payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activityType": {
+                  "type": "string",
+                  "example": "movie"
+                },
+                "activityId": {
+                  "type": "string",
+                  "example": "507f1f77bcf86cd799439011"
+                }
+              }
+            }
           }
-        }
-      }
-    },
-    "/groups/deleteGroupBtn": {
-      "post": {
-        "description": "",
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -596,6 +614,55 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/groups/{id}/activities/{activityType}/{activityId}": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Remove a movie or game from a group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Group id"
+          },
+          {
+            "name": "activityType",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Activity type to remove",
+            "enum": [
+              "movie",
+              "game"
+            ]
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Activity id to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity removed from group"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Group not found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -652,6 +719,12 @@
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "500": {
             "description": "Internal Server Error"
@@ -732,6 +805,12 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Not Found"
           },
@@ -756,6 +835,12 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           },
           "404": {
             "description": "Not Found"

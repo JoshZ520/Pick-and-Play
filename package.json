@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
-    "prestart": "npx kill-port 3000",
+    "prestart": "npx kill-port 3000 >NUL 2>&1",
     "start": "nodemon server.js",
     "start-prod": "node server.js",
     "server": "nodemon server.js",

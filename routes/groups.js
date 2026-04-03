@@ -28,7 +28,17 @@ router.post('/',
 		required: true,
 		schema: {
 			groupName: 'Friday Night Group',
-			winVote: 'None yet'
+			winVote: 'None yet',
+			activities: [
+				{
+					activityType: 'movie',
+					activityId: '507f1f77bcf86cd799439011'
+				},
+				{
+					activityType: 'game',
+					activityId: '507f1f77bcf86cd799439012'
+				}
+			]
 		}
 	}
 	#swagger.responses[201] = { description: 'Group created' }
@@ -67,7 +77,34 @@ router.post('/:id/activities',
 );
 
 // Remove a movie or game from a group
-router.delete('/:id/activities/:activityType/:activityId', groupController.removeActivityFromGroup);
+router.delete('/:id/activities/:activityType/:activityId',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Remove a movie or game from a group'
+	#swagger.parameters['id'] = {
+		in: 'path',
+		description: 'Group id',
+		required: true,
+		type: 'string'
+	}
+	#swagger.parameters['activityType'] = {
+		in: 'path',
+		description: 'Activity type to remove',
+		required: true,
+		type: 'string',
+		enum: ['movie', 'game']
+	}
+	#swagger.parameters['activityId'] = {
+		in: 'path',
+		description: 'Activity id to remove',
+		required: true,
+		type: 'string'
+	}
+	#swagger.responses[200] = { description: 'Activity removed from group' }
+	#swagger.responses[404] = { description: 'Group not found' }
+	*/
+	groupController.removeActivityFromGroup
+);
 
 //Updates group
 router.put('/:id', groupController.updateGroup);
