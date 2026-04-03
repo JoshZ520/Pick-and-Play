@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../DB/connect');
+const { isAuthenticated } = require('../middleware/auth');
+const { ObjectId } = require('mongodb');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
@@ -27,7 +29,7 @@ router.get('/register', (req, res) => {
 
 //@desc     Dashboard
 //@route    GET /dashboard
-router.get('/dashboard', async (req,res) => {
+router.get('/dashboard', isAuthenticated, async (req,res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();
@@ -38,6 +40,25 @@ router.get('/dashboard', async (req,res) => {
             winVote: g.winVote ?? 0
         }));
         res.render('dashboard', { movies, games, groups });
+        
+        // Populate group members with user data
+        groups = await Promise.all(groups.map(async (group) => {
+            if (group.members && group.members.length > 0) {
+                const membersList = await Promise.all(
+                    group.members.map(async (memberId) => {
+                        const user = await getDb().collection('users').findOne({ _id: memberId });
+                        return user ? user.username : 'Unknown User';
+                    })
+                );
+                group.memberNames = membersList;
+            } else {
+                group.memberNames = [];
+            }
+            return group;
+        }));
+        
+        const isAdmin = req.user && req.user.roleID === 2;
+        res.render('dashboard', { movies, games, groups, isAdmin });
     } catch (err) {
         res.status(500).render('dashboard', { error: 'Failed to load activities' });
     }

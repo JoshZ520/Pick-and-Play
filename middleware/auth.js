@@ -1,8 +1,8 @@
 // Middleware to check if user is logged in
 const isAuthenticated = (req, res, next) => {
-    // Guard clause: Check if NOT authenticated and return error
+    // Guard clause: Check if NOT authenticated and redirect to login
     if (!req.isAuthenticated()) {
-        return res.status(401).json({ error: 'Not authenticated' });
+        return res.redirect('/login');
     }
     // If authenticated, continue to next middleware/controller
     next();

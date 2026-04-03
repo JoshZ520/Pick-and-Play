@@ -5,18 +5,18 @@ const bcrypt = require('bcrypt');
 const { getDb } = require('../DB/connect');
 const ObjectId = require('mongodb').ObjectId;
 
-// Local Strategy - username/password authentication
+// Local Strategy - email/password authentication
 passport.use(new LocalStrategy(
     {
-        usernameField: 'username',
+        usernameField: 'email',
         passwordField: 'password'
     },
-    async (username, password, done) => {
+    async (email, password, done) => {
         try {
-            const user = await getDb().collection('users').findOne({ username });
+            const user = await getDb().collection('users').findOne({ email });
 
             if (!user) {
-                return done(null, false, { message: 'Incorrect username' });
+                return done(null, false, { message: 'Incorrect email or password' });
             }
 
             const isValidPassword = await bcrypt.compare(password, user.password);
