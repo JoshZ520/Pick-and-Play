@@ -63,8 +63,6 @@ const updateGroup = async (req, res, next) => {
             membersID: req.body.members,
             activitiesID: req.body.activities
         }
-        const result = await getDb().collection('groups').replaceOne({ _id: groupId}, updateGroup);
-        };
         const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
         if (result.modifiedCount > 0) {
             res.status(204).send();
@@ -141,6 +139,9 @@ const deleteBtnGroup = async (req, res, next) => {
     } catch (err) {
         console.error('Delete group error:', err);
         res.status(500).json({ message: err.message });
+    }
+};
+
 const joinGroup = async (req, res) => {
     if (!ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ error: 'Must use a valid group id' });
