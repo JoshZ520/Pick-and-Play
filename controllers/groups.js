@@ -30,9 +30,29 @@ const singleGroup = async (req, res, next) => {
 
 const createGroup = async (req, res, next) => {
     try {
+        const groupName = req.body.groupName?.trim();
+        if (!groupName) {
+            return res.status(400).json({ message: 'Group name is required' });
+        }
+
+        const creatorId = req.user?._id;
+        const requestedMembers = Array.isArray(req.body.members) ? req.body.members : [];
+        const members = creatorId
+            ? [
+                creatorId,
+                ...requestedMembers.filter((memberId) => memberId?.toString() !== creatorId.toString())
+            ]
+            : requestedMembers;
+        const activities = Array.isArray(req.body.activities) ? req.body.activities : [];
+
         const newGroup = {
-            groupName: req.body.groupName,
-            winVote: req.body.winVote,
+            groupName,
+            votes: req.body.votes || 0,  // Default to 0 if not provided
+            winVote: req.body.winVote || 0,  // Default to 0 if not provided
+            createdBy: creatorId,
+            groupAdminId: creatorId,
+            members,
+            activities
         };
 
         const result = await getDb().collection('groups').insertOne(newGroup);
@@ -53,11 +73,24 @@ const updateGroup = async (req, res, next) => {
 
     const groupId = new ObjectId(req.params.id);
     try {
-        const updateGroup = {
+        const members = Array.isArray(req.body.members) ? req.body.members : undefined;
+        const activities = Array.isArray(req.body.activities) ? req.body.activities : undefined;
+
+        const groupUpdates = {
             groupName: req.body.groupName,
+            votes: req.body.votes,
             winVote: req.body.winVote,
-        }
-        const result = await getDb().collection('groups').replaceOne({ _id: groupId}, updateGroup);
+            members,
+            activities
+        };
+
+        Object.keys(groupUpdates).forEach((key) => {
+            if (groupUpdates[key] === undefined) {
+                delete groupUpdates[key];
+            }
+        });
+
+        const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
         if (result.modifiedCount > 0) {
             res.status(204).send();
         } else {
@@ -87,10 +120,97 @@ const deleteGroup = async (req, res, next) => {
     }
 };
 
+const btnCreateGroup = async (req, res, next) => {
+    try {
+        console.log('Group create body:', req.body);
+        const groupName = req.body?.groupName?.trim() || '';
+        if (!groupName) {
+            return res.status(400).json({ message: 'Group name is required' });
+        }
+        const creatorId = req.user?._id;
+        const newGroup = {
+            groupName: groupName,
+            votes: 0,   // Per swagger schema
+            winVote: 1,  // Per swagger schema
+            createdBy: creatorId,
+            groupAdminId: creatorId,
+            members: creatorId ? [creatorId] : [],
+            activities: []
+        };
+        const result = await getDb().collection('groups').insertOne(newGroup);
+        if (result.acknowledged) {
+            res.status(201).json({ message: 'Group created successfully', insertedId: result.insertedId });
+        } else {
+            res.status(500).json({ message: 'Failed to create group' });
+        }
+    } catch (err) {
+        console.error('Create group error:', err);
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const deleteBtnGroup = async (req, res, next) => {
+    try {
+        console.log('Group delete body:', req.body);
+        const groupId = req.body?.groupId?.trim() || '';
+        if (!groupId) {
+            return res.status(400).json({ message: 'Group ID is required' });
+        }
+        if (!ObjectId.isValid(groupId)) {
+            return res.status(400).json({ message: 'Invalid group ID format' });
+        }
+        const dbGroupId = new ObjectId(groupId);
+        const result = await getDb().collection('groups').deleteOne({ _id: dbGroupId });
+        if (result.deletedCount > 0) {
+            res.status(200).json({ message: 'Group deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'No group found to delete' });
+        }
+    } catch (err) {
+        console.error('Delete group error:', err);
+        res.status(500).json({ message: err.message });
+    }
+};
+
+const joinGroup = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    const groupId = new ObjectId(req.params.id);
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    try {
+        const result = await getDb().collection('groups').updateOne(
+            { _id: groupId },
+            {
+                $addToSet: {
+                    members: userId
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        return res.status(200).json({ message: 'Joined group successfully' });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 module.exports = {
     allGroups,
     singleGroup,
     createGroup,
     updateGroup,
-    deleteGroup
-}
+    deleteGroup,
+    btnCreateGroup,
+    deleteBtnGroup,
+    joinGroup
+};

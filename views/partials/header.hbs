@@ -3,11 +3,10 @@
         <a href="/" title="Return to home page">Pick & Play</a>
     </div>
     <div class="tools">
-        <script>
-        if (locals.loggedin)
+        {{#if loggedin}}
             <a title="Log out" href="/account/logout">Logout</a>
-        else 
-            <a title="Login" href="/auth/login">My Account</a>
-        </script>
+        {{else}}
+            <a title="Login" href="/login">My Account</a>
+        {{/if}}
     </div>
 </header>
