@@ -1,20 +1,23 @@
 const router = require('express').Router();
 
 const gameController = require('../controllers/games');
+const { isAdmin } = require('../middleware/auth');
 
-//Gets all groups
+// Public routes
+// Get all games
 router.get('/', gameController.allGames);
 
-//Gets one group from database
+// Get one game by id
 router.get('/:id', gameController.singleGame);
 
-//Creates a new group
-router.post('/', gameController.createGame);
+// Protected routes (Admin only)
+// Create a new game
+router.post('/', isAdmin, gameController.createGame);
 
-//Updates group
-router.put('/:id', gameController.updateGame);
+// Update game
+router.put('/:id', isAdmin, gameController.updateGame);
 
-//Delete group
-router.delete('/:id', gameController.deleteGame);
+// Delete game
+router.delete('/:id', isAdmin, gameController.deleteGame);
 
 module.exports = router;
