@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+const initializeActivitiesPage = () => {
     const votesDisplay = document.getElementById('votes-display');
     const addBtn = document.getElementById('add-btn');
     const createGroupBtn = document.getElementById('createGroupBtn');
@@ -17,12 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const openCreateGroupModal = () => {
         if (createGroupModal) {
             createGroupModal.classList.remove('is-hidden');
+            createGroupModal.style.display = 'block';
         }
     };
 
     const closeCreateGroupModal = () => {
         if (createGroupModal) {
             createGroupModal.classList.add('is-hidden');
+            createGroupModal.style.display = 'none';
         }
         if (createGroupForm) {
             createGroupForm.reset();
@@ -35,12 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const openDeleteGroupModal = () => {
         if (deleteGroupModal) {
             deleteGroupModal.classList.remove('is-hidden');
+            deleteGroupModal.style.display = 'block';
         }
     };
 
     const closeDeleteGroupModal = () => {
         if (deleteGroupModal) {
             deleteGroupModal.classList.add('is-hidden');
+            deleteGroupModal.style.display = 'none';
         }
         if (deleteGroupForm) {
             deleteGroupForm.reset();
@@ -48,6 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deleteFormError) {
             deleteFormError.classList.add('is-hidden');
         }
+    };
+
+    const getErrorMessage = async (response, fallbackMessage) => {
+        const contentType = response.headers.get('content-type') || '';
+
+        if (contentType.includes('application/json')) {
+            const errorData = await response.json().catch(() => ({}));
+            return errorData.error || errorData.message || fallbackMessage;
+        }
+
+        const text = await response.text().catch(() => '');
+        return text || fallbackMessage;
     };
 
     if (addBtn && votesDisplay) {
@@ -58,11 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (createGroupBtn) {
-        createGroupBtn.addEventListener('click', openCreateGroupModal);
+        createGroupBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            openCreateGroupModal();
+        });
     }
 
-    if (deleteGroupBtn) {
-        deleteGroupBtn.addEventListener('click', openDeleteGroupModal);
+    if (deleteGroupBtn && !deleteGroupBtn.disabled) {
+        deleteGroupBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            openDeleteGroupModal();
+        });
     }
 
     if (closeCreateGroupModalBtn) {
@@ -111,8 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to create group');
+                    throw new Error(await getErrorMessage(response, 'Failed to create group'));
                 }
 
                 closeCreateGroupModal();
@@ -147,8 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Failed to delete group');
+                    throw new Error(await getErrorMessage(response, 'Failed to delete group'));
                 }
 
                 closeDeleteGroupModal();
@@ -161,4 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeActivitiesPage, { once: true });
+} else {
+    initializeActivitiesPage();
+}
