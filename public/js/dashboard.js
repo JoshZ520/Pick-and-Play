@@ -2,10 +2,20 @@
 
 // Handle logout button click
 document.addEventListener('DOMContentLoaded', () => {
+    const votesDisplay = document.getElementById('votes-display');
+    const addBtn = document.getElementById('add-btn');
     const logoutBtn = document.getElementById('logout-btn');
     const createGroupForm = document.getElementById('create-group-form');
     const createGroupFeedback = document.getElementById('create-group-feedback');
     const joinGroupBtns = document.querySelectorAll('.join-group-btn');
+    let votes = 0;
+
+    if (addBtn && votesDisplay) {
+        addBtn.addEventListener('click', () => {
+            votes += 1;
+            votesDisplay.textContent = `Votes: ${votes} / 7`;
+        });
+    }
     
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {

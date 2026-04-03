@@ -35,13 +35,22 @@ const createGroup = async (req, res, next) => {
             return res.status(400).json({ message: 'Group name is required' });
         }
 
-        const members = Array.isArray(req.body.members) ? req.body.members : [];
+        const creatorId = req.user?._id;
+        const requestedMembers = Array.isArray(req.body.members) ? req.body.members : [];
+        const members = creatorId
+            ? [
+                creatorId,
+                ...requestedMembers.filter((memberId) => memberId?.toString() !== creatorId.toString())
+            ]
+            : requestedMembers;
         const activities = Array.isArray(req.body.activities) ? req.body.activities : [];
 
         const newGroup = {
             groupName,
             votes: req.body.votes || 0,  // Default to 0 if not provided
             winVote: req.body.winVote || 0,  // Default to 0 if not provided
+            createdBy: creatorId,
+            groupAdminId: creatorId,
             members,
             activities
         };
@@ -118,11 +127,14 @@ const btnCreateGroup = async (req, res, next) => {
         if (!groupName) {
             return res.status(400).json({ message: 'Group name is required' });
         }
+        const creatorId = req.user?._id;
         const newGroup = {
             groupName: groupName,
             votes: 0,   // Per swagger schema
             winVote: 1,  // Per swagger schema
-            members: [],
+            createdBy: creatorId,
+            groupAdminId: creatorId,
+            members: creatorId ? [creatorId] : [],
             activities: []
         };
         const result = await getDb().collection('groups').insertOne(newGroup);

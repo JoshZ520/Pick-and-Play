@@ -1,0 +1,104 @@
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.movie-card,
+.group-card,
+.game-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.group-card,
+.game-card {
+    margin-top: 12px;
+}
+
+.movie-image,
+.game-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.movie-card h2 {
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+.movie-card p {
+    margin: 5px 0;
+}
+
+.my-groups,
+.groups,
+.games,
+.admin-group-create {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+.my-groups {
+    background-color: #eed2cc;
+}
+
+.my-groups-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+}
+
+.my-group-item {
+    background-color: white;
+    border-left: 4px solid #6C9A8B;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.pick-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.pick-btn:hover {
+    background-color: #0056b3;
+}
+
+#create-group-form {
+    display: grid;
+    gap: 8px;
+    max-width: 400px;
+}
+
+#create-group-form input,
+.modal-input,
+.modal-select {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+}
+
+.modal-select {
+    min-height: 38px;
+}
+
+#create-group-feedback {
+    font-weight: 600;
+}

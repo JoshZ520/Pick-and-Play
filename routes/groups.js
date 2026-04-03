@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const groupController = require('../controllers/groups');
-const { isAuthenticated, isAdmin } = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 
 //Gets all groups
 /*
@@ -21,7 +21,7 @@ router.get('/:id', groupController.singleGroup);
 router.post('/',
 	/*
 	#swagger.tags = ['Groups']
-	#swagger.description = 'Create a new group (admin only)'
+	#swagger.description = 'Create a new group'
 	#swagger.parameters['body'] = {
 		in: 'body',
 		description: 'Group payload',
@@ -32,9 +32,7 @@ router.post('/',
 		}
 	}
 	#swagger.responses[201] = { description: 'Group created' }
-	#swagger.responses[403] = { description: 'Admin access required' }
 	*/
-	isAdmin,
 	groupController.createGroup
 );
 

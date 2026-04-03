@@ -1,0 +1,57 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #FBF7F4;
+}
+
+main {
+    background-color: white;
+    padding: .5rem 1rem;
+}
+
+p {
+    margin: 10px 0 !important;
+}
+
+.error,
+.form-error {
+    color: red;
+}
+
+.is-hidden {
+    display: none;
+}
+
+header {
+    background-color: #6C9A8B;
+    padding: 10px;
+}
+
+.site-name a {
+    color: white;
+    font-weight: 700;
+    transition: .5s;
+    font-size: 2rem;
+}
+
+.site-name a:hover {
+    color: #EED2CC;
+}
+
+.navbar {
+    background-color: Salmon;
+}
+
+footer {
+    background-color: #6C9A8B;
+    padding: .5rem 1rem;
+    color: white;
+}
+
+.login-container {
+    width: 400px;
+    margin-top: 50px;
+    text-align: center;
+}
