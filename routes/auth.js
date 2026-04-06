@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userController = require('../controllers/users');
 const passport = require('passport');
+const { isAdmin } = require('../middleware/auth');
 
 // Register new user
 router.post('/register', 
@@ -58,6 +59,33 @@ router.get('/me',
     #swagger.description = 'Get the currently authenticated user profile'
     */
     userController.getCurrentUser);
+
+// Update a user's role (admin only)
+router.patch('/users/:id/role',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Update a user role (admin only)'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'User id',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'New role payload',
+        required: true,
+        schema: {
+            roleID: 2
+        }
+    }
+    #swagger.responses[200] = { description: 'User role updated successfully' }
+    #swagger.responses[400] = { description: 'Invalid user id or invalid role value' }
+    #swagger.responses[403] = { description: 'Admin only' }
+    #swagger.responses[404] = { description: 'User not found' }
+    */
+    isAdmin,
+    userController.updateUserRole);
 
 // Google OAuth - initiate login
 router.get('/google',

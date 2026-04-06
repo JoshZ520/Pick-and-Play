@@ -124,6 +124,58 @@
         }
       }
     },
+    "/auth/users/{id}/role": {
+      "patch": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Update a user role (admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "User id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "New role payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "roleID": {
+                  "type": "number",
+                  "example": 2
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User role updated successfully"
+          },
+          "400": {
+            "description": "Invalid user id or invalid role value"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin only"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/auth/google": {
       "get": {
         "tags": [

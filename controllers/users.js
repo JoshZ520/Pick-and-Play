@@ -1,4 +1,5 @@
 const { getDb } = require('../DB/connect');
+const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
 // Register a new user
@@ -94,9 +95,36 @@ const getCurrentUser = (req, res) => {
     }
 };
 
+const updateUserRole = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid user id' });
+    }
+
+    const nextRoleId = Number(req.body?.roleID);
+    if (![1, 2].includes(nextRoleId)) {
+        return res.status(400).json({ error: 'Role must be 1 (Member) or 2 (Admin)' });
+    }
+
+    try {
+        const result = await getDb().collection('users').updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: { roleID: nextRoleId } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ message: 'User role updated successfully' });
+    } catch (err) {
+        return res.status(500).json({ error: err.message || 'Failed to update user role' });
+    }
+};
+
 module.exports = {
     register,
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    updateUserRole
 };

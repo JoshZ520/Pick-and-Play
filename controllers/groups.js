@@ -280,6 +280,13 @@ const voteOnActivity = async (req, res) => {
             return res.status(404).json({ error: 'Group not found' });
         }
 
+        const memberIds = Array.isArray(group.members) ? group.members : [];
+        const isMember = memberIds.some((memberId) => memberId?.toString?.() === userId.toString());
+
+        if (!isMember) {
+            return res.status(403).json({ error: 'You must join this group before voting' });
+        }
+
         if (group.isFinished) {
             return res.status(409).json({ error: 'Voting is closed for this group' });
         }
