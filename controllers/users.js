@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 // Register a new user
 const register = async (req, res) => {
     try {
-        // TODO: Extract username, email, password from req.body
         const { username, email, password } = req.body;
 
         if (!username || !email || !password) {
@@ -48,7 +47,6 @@ const register = async (req, res) => {
             res.status(500).json({ error: 'Failed to register'});
         }
     } catch (err) {
-        // TODO: Send 500 error response with error message
         res.status(500).json({ error: err.message || 'Error occurred during registration' });
     }
 };

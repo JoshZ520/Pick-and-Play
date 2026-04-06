@@ -2,8 +2,6 @@ window.PickAndPlayActivities = window.PickAndPlayActivities || {};
 
 const initializeActivitiesPage = () => {
     const elements = {
-        votesDisplay: document.getElementById('votes-display'),
-        addBtn: document.getElementById('add-btn'),
         createGroupBtn: document.getElementById('createGroupBtn'),
         deleteGroupBtn: document.getElementById('deleteGroupBtn'),
         createGroupModal: document.getElementById('createGroupModal'),
@@ -26,15 +24,6 @@ const initializeActivitiesPage = () => {
         movieActivitySelect: document.getElementById('movieActivitySelect'),
         gameActivitySelect: document.getElementById('gameActivitySelect')
     };
-
-    let votes = 0;
-
-    if (elements.addBtn && elements.votesDisplay) {
-        elements.addBtn.addEventListener('click', () => {
-            votes += 1;
-            elements.votesDisplay.textContent = `Votes: ${votes} / 7`;
-        });
-    }
 
     const modalApi = window.PickAndPlayActivities.createModalApi(elements);
     modalApi.bindModalControls();
