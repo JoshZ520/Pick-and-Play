@@ -46,7 +46,24 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
             email: req.user?.email || 'No email available'
         };
         const isAdmin = req.user?.roleID === 2;
-        res.render('dashboard', { userProfile, isAdmin });
+        let allUsers = [];
+
+        if (isAdmin) {
+            allUsers = await getDb().collection('users').find({}, {
+                projection: {
+                    username: 1,
+                    email: 1,
+                    roleID: 1
+                }
+            }).toArray();
+
+            allUsers = allUsers.map((user) => ({
+                ...user,
+                roleLabel: user.roleID === 2 ? 'Admin' : 'Member'
+            }));
+        }
+
+        res.render('dashboard', { userProfile, isAdmin, allUsers });
     } catch (err) {
         res.status(500).render('dashboard', { error: 'Failed to load dashboard' });
     }
@@ -74,11 +91,22 @@ const renderGroupsPage = async (req, res) => {
         let groups = [];
 
         if (canViewGroups) {
+            const users = await getDb().collection('users').find({}, {
+                projection: {
+                    username: 1,
+                    roleID: 1
+                }
+            }).toArray();
+
+            const usersById = new Map(
+                users.map((user) => [user._id?.toString(), user])
+            );
+
             groups = await getDb().collection('groups').find().toArray();
             groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
                 ...g,
                 groupName: g.groupName.trim(),
-                winVote: g.winVote ?? 0,
+                memberCount: Array.isArray(g.members) ? g.members.length : 0,
                 isFinished: Boolean(g.isFinished),
                 winningActivity: g.winningActivity || null,
                 isMember: Boolean(
@@ -86,6 +114,15 @@ const renderGroupsPage = async (req, res) => {
                     && Array.isArray(g.members)
                     && g.members.some((id) => id?.toString?.() === currentUserId)
                 ),
+                memberDetails: Array.isArray(g.members)
+                    ? g.members.map((memberId) => {
+                        const user = usersById.get(memberId?.toString?.());
+                        return {
+                            username: user?.username || 'Unknown User',
+                            roleLabel: user?.roleID === 2 ? 'Admin' : 'Member'
+                        };
+                    })
+                    : [],
                 activities: Array.isArray(g.activities)
                     ? g.activities.map((activity) => ({
                         ...activity,
@@ -98,6 +135,11 @@ const renderGroupsPage = async (req, res) => {
                         )
                     }))
                     : []
+            })).map((group) => ({
+                ...group,
+                totalVotes: Array.isArray(group.activities)
+                    ? group.activities.reduce((sum, activity) => sum + (Number(activity.voteCount) || 0), 0)
+                    : 0
             }));
 
             // Finished groups are only visible to members of that group.

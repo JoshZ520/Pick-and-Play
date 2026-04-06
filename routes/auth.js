@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const userController = require('../controllers/users');
 const passport = require('passport');
+const { isAdmin } = require('../middleware/auth');
 
 // Register new user
 router.post('/register', 
@@ -58,6 +59,15 @@ router.get('/me',
     #swagger.description = 'Get the currently authenticated user profile'
     */
     userController.getCurrentUser);
+
+// Update a user's role (admin only)
+router.patch('/users/:id/role',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Update a user role (admin only)'
+    */
+    isAdmin,
+    userController.updateUserRole);
 
 // Google OAuth - initiate login
 router.get('/google',

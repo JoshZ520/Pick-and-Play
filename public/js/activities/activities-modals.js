@@ -55,6 +55,11 @@ window.PickAndPlayActivities.createModalApi = (elements) => {
         updateActivitySelectVisibility();
     };
 
+    const closeManageRolesModal = () => {
+        toggleModal(elements.manageRolesModal, false);
+        resetFormState(elements.manageRolesForm, elements.manageRolesFormError);
+    };
+
     const openAddActivityModal = (groupId, groupName) => {
         if (elements.activityGroupId) {
             elements.activityGroupId.value = groupId;
@@ -65,6 +70,10 @@ window.PickAndPlayActivities.createModalApi = (elements) => {
 
         updateActivitySelectVisibility();
         toggleModal(elements.addActivityModal, true);
+    };
+
+    const openManageRolesModal = () => {
+        toggleModal(elements.manageRolesModal, true);
     };
 
     const bindModalControls = () => {
@@ -80,9 +89,15 @@ window.PickAndPlayActivities.createModalApi = (elements) => {
             });
         }
 
+        elements.manageRolesBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            openManageRolesModal();
+        });
+
         elements.closeCreateGroupModalBtn?.addEventListener('click', closeCreateGroupModal);
         elements.closeDeleteGroupModalBtn?.addEventListener('click', closeDeleteGroupModal);
         elements.closeAddActivityModalBtn?.addEventListener('click', closeAddActivityModal);
+        elements.closeManageRolesModalBtn?.addEventListener('click', closeManageRolesModal);
         elements.activityType?.addEventListener('change', updateActivitySelectVisibility);
         updateActivitySelectVisibility();
 
@@ -96,6 +111,9 @@ window.PickAndPlayActivities.createModalApi = (elements) => {
             if (event.target === elements.addActivityModal) {
                 closeAddActivityModal();
             }
+            if (event.target === elements.manageRolesModal) {
+                closeManageRolesModal();
+            }
         });
     };
 
@@ -104,7 +122,9 @@ window.PickAndPlayActivities.createModalApi = (elements) => {
         closeCreateGroupModal,
         closeDeleteGroupModal,
         closeAddActivityModal,
+        closeManageRolesModal,
         openAddActivityModal,
+        openManageRolesModal,
         showError
     };
 };

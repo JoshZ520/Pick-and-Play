@@ -15,6 +15,43 @@
     {{/if}}
 </section>
 
+{{#if isAdmin}}
+<section class="profile-summary admin-tools">
+    <h2>Admin Tools</h2>
+    <button id="manageRolesBtn" class="btn" type="button">Manage User Roles</button>
+</section>
+
+<div id="manageRolesModal" class="modal-overlay is-hidden">
+    <div class="modal-window">
+        <span class="modal-close" id="closeManageRolesModal">×</span>
+        <h2>Manage User Roles</h2>
+        <form id="manageRolesForm">
+            <div class="form-group">
+                <label for="roleUserSelect">User:</label>
+                <select id="roleUserSelect" name="userId" class="browser-default modal-select" required>
+                    {{#each allUsers}}
+                        <option value="{{_id}}">{{username}} ({{email}}) - {{roleLabel}}</option>
+                    {{else}}
+                        <option value="">No users available</option>
+                    {{/each}}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="roleValueSelect">Role:</label>
+                <select id="roleValueSelect" name="roleID" class="browser-default modal-select" required>
+                    <option value="1">Member</option>
+                    <option value="2">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Save Role</button>
+        </form>
+        <p id="manageRolesFormError" class="form-error is-hidden"></p>
+    </div>
+</div>
+{{/if}}
+
 <button id="logout-btn" class="btn">Log Out</button>
 
 <script src="/js/dashboard.js"></script>

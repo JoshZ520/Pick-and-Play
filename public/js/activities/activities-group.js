@@ -103,6 +103,31 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
         }
     });
 
+    elements.manageRolesForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const userId = elements.roleUserSelect?.value || '';
+        const roleID = Number(elements.roleValueSelect?.value || 0);
+
+        if (!userId || ![1, 2].includes(roleID)) {
+            modalApi.showError(elements.manageRolesFormError, 'Please select a valid user and role.');
+            return;
+        }
+
+        try {
+            await sendJsonRequest(`/auth/users/${userId}/role`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roleID })
+            }, 'Failed to update user role');
+
+            modalApi.closeManageRolesModal();
+            window.location.reload();
+        } catch (err) {
+            modalApi.showError(elements.manageRolesFormError, err.message);
+        }
+    });
+
     addActivityBtns.forEach((button) => {
         button.addEventListener('click', (event) => {
             event.preventDefault();
