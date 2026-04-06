@@ -41,7 +41,9 @@ const buildActivityEntries = async (rawActivities = []) => {
             return {
                 activityId: selectedActivityId,
                 activityType,
-                title: activity.title
+                title: activity.title,
+                voteCount: 0,
+                votedUserIds: []
             };
         })
     );
@@ -113,41 +115,6 @@ const createGroup = async (req, res, next) => {
     }
 };
 
-const updateGroup = async (req, res, next) => {
-    if (!ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({ error: 'Must use a valid group id'});
-    }
-
-    const groupId = new ObjectId(req.params.id);
-    try {
-        const members = Array.isArray(req.body.members) ? req.body.members : undefined;
-        const activities = Array.isArray(req.body.activities) ? req.body.activities : undefined;
-
-        const groupUpdates = {
-            groupName: req.body.groupName,
-            votes: req.body.votes,
-            winVote: req.body.winVote,
-            members,
-            activities
-        };
-
-        Object.keys(groupUpdates).forEach((key) => {
-            if (groupUpdates[key] === undefined) {
-                delete groupUpdates[key];
-            }
-        });
-
-        const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
-        if (result.modifiedCount > 0) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ message: 'No group found to update' });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
 const deleteGroup = async (req, res, next) => {
     if (!ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ error: 'Must use a valid group id'});
@@ -213,18 +180,32 @@ const addActivityToGroup = async (req, res) => {
             return res.status(400).json({ error: 'A valid activity selection is required' });
         }
 
+        const group = await getDb().collection('groups').findOne({ _id: groupId });
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const currentActivities = Array.isArray(group.activities) ? group.activities : [];
+        const alreadyExists = currentActivities.some((activity) =>
+            activity.activityType === activityEntry.activityType
+            && activity.activityId?.toString?.() === activityEntry.activityId.toString()
+        );
+
+        if (alreadyExists) {
+            return res.status(409).json({ error: 'Activity is already in this group' });
+        }
+
+        const updatedActivities = [...currentActivities, activityEntry];
+
         const result = await getDb().collection('groups').updateOne(
             { _id: groupId },
             {
-                $addToSet: {
-                    activities: activityEntry
+                $set: {
+                    activities: updatedActivities
                 }
             }
         );
-
-        if (result.matchedCount === 0) {
-            return res.status(404).json({ error: 'Group not found' });
-        }
 
         return res.status(200).json({ message: 'Activity added to group', activity: activityEntry });
     } catch (err) {
@@ -271,13 +252,151 @@ const removeActivityFromGroup = async (req, res) => {
     }
 };
 
+const voteOnActivity = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    if (!['movie', 'game'].includes(req.params.activityType)) {
+        return res.status(400).json({ error: 'Activity type must be movie or game' });
+    }
+
+    if (!ObjectId.isValid(req.params.activityId)) {
+        return res.status(400).json({ error: 'Must use a valid activity id' });
+    }
+
+    const groupId = new ObjectId(req.params.id);
+    const activityId = new ObjectId(req.params.activityId);
+    const userId = req.user?._id;
+
+    if (!userId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    try {
+        const group = await getDb().collection('groups').findOne({ _id: groupId });
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        if (group.isFinished) {
+            return res.status(409).json({ error: 'Voting is closed for this group' });
+        }
+
+        const activities = Array.isArray(group.activities) ? group.activities : [];
+        const activityIndex = activities.findIndex((activity) =>
+            activity.activityType === req.params.activityType
+            && activity.activityId?.toString?.() === activityId.toString()
+        );
+
+        if (activityIndex === -1) {
+            return res.status(404).json({ error: 'Activity not found in this group' });
+        }
+
+        const activity = activities[activityIndex];
+        const votedUserIds = Array.isArray(activity.votedUserIds) ? activity.votedUserIds : [];
+        const hasVoted = votedUserIds.some((voterId) => voterId?.toString?.() === userId.toString());
+
+        if (hasVoted) {
+            return res.status(409).json({ error: 'You already voted for this activity' });
+        }
+
+        const updatedActivity = {
+            ...activity,
+            voteCount: Number(activity.voteCount) + 1 || 1,
+            votedUserIds: [...votedUserIds, userId]
+        };
+
+        const updatedActivities = [...activities];
+        updatedActivities[activityIndex] = updatedActivity;
+
+        await getDb().collection('groups').updateOne(
+            { _id: groupId },
+            {
+                $set: {
+                    activities: updatedActivities
+                }
+            }
+        );
+
+        return res.status(200).json({
+            message: 'Vote recorded',
+            activity: {
+                activityId: updatedActivity.activityId,
+                activityType: updatedActivity.activityType,
+                voteCount: updatedActivity.voteCount
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+const finishGroupVoting = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    const groupId = new ObjectId(req.params.id);
+
+    try {
+        const group = await getDb().collection('groups').findOne({ _id: groupId });
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        if (group.isFinished) {
+            return res.status(200).json({ message: 'Group is already finished', winningActivity: group.winningActivity || null });
+        }
+
+        const activities = Array.isArray(group.activities) ? group.activities : [];
+        if (!activities.length) {
+            return res.status(400).json({ error: 'No activities in this group to finish voting' });
+        }
+
+        const winningActivity = activities.reduce((best, current) => {
+            if (!best) {
+                return current;
+            }
+
+            return Number(current.voteCount) > Number(best.voteCount) ? current : best;
+        }, null);
+
+        const winnerSummary = winningActivity
+            ? {
+                activityId: winningActivity.activityId,
+                activityType: winningActivity.activityType,
+                title: winningActivity.title,
+                voteCount: Number(winningActivity.voteCount) || 0
+            }
+            : null;
+
+        await getDb().collection('groups').updateOne(
+            { _id: groupId },
+            {
+                $set: {
+                    isFinished: true,
+                    winningActivity: winnerSummary
+                }
+            }
+        );
+
+        return res.status(200).json({ message: 'Voting finished', winningActivity: winnerSummary });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
 module.exports = {
     allGroups,
     singleGroup,
     createGroup,
-    updateGroup,
     deleteGroup,
     joinGroup,
     addActivityToGroup,
-    removeActivityFromGroup
+    removeActivityFromGroup,
+    voteOnActivity,
+    finishGroupVoting
 };
