@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { getDb } = require('../DB/connect');
-const { isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
@@ -35,6 +35,33 @@ router.get('/register', (req, res) => {
         layout: 'mainLayout'
     });
 })
+
+// Get all users (admin only)
+router.get('/users',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Get a list of all users (admin only)'
+    #swagger.responses[200] = { description: 'List of users' }
+    #swagger.responses[403] = { description: 'Admin only' }
+    */
+    isAdmin,
+    async (req, res) => {
+        try {
+            const users = await getDb().collection('users').find({}, {
+                projection: {
+                    username: 1,
+                    email: 1,
+                    roleID: 1,
+                    createdAt: 1
+                }
+            }).toArray();
+
+            return res.status(200).json(users);
+        } catch (err) {
+            return res.status(500).json({ error: err.message || 'Failed to fetch users' });
+        }
+    }
+);
 
 
 //@desc     Dashboard

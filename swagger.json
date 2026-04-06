@@ -32,6 +32,28 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Get a list of all users (admin only)",
+        "responses": {
+          "200": {
+            "description": "List of users"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin only"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/dashboard": {
       "get": {
         "description": "",
