@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const groupId = e.target.getAttribute('data-id');
 
             try {
-                const response = await fetch(`/groups/${groupId}/join`, {
+                const response = await fetch(`/api/groups/${groupId}/join`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

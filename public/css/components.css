@@ -90,6 +90,11 @@
     margin-bottom: 8px;
 }
 
+.group-activity-actions {
+    display: flex;
+    gap: 8px;
+}
+
 .activity-option-section {
     margin-top: 12px;
 }
@@ -127,6 +132,16 @@
 
 .remove-activity-btn {
     background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.vote-activity-btn,
+.finish-group-btn {
+    background-color: #537A5A;
     color: white;
     border: none;
     border-radius: 4px;

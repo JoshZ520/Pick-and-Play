@@ -6,7 +6,7 @@ const { isAuthenticated } = require('../middleware/auth');
 
 router.use('/movies', require('./movies'));
 router.use('/auth', require('./auth'));
-router.use('/groups', require('./groups'));
+router.use('/api/groups', require('./groups'));
 router.use('/games', require('./games'));
 
 //@desc     Login/Landing page
@@ -85,26 +85,49 @@ router.get('/', async (req,res) => {
     }
 });
 
-router.get('/activities', async (req,res) => {
+const renderGroupsPage = async (req, res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
         const games = await getDb().collection('games').find().toArray();
+        const currentUserId = req.user?._id?.toString();
+        const isAdmin = req.user && req.user.roleID === 2;
         let groups = await getDb().collection('groups').find().toArray();
         groups = groups.filter(g => g && g.groupName && typeof g.groupName === 'string' && g.groupName.trim() !== '').map(g => ({
             ...g,
             groupName: g.groupName.trim(),
             winVote: g.winVote ?? 0,
+            isFinished: Boolean(g.isFinished),
+            winningActivity: g.winningActivity || null,
+            isMember: Boolean(
+                currentUserId
+                && Array.isArray(g.members)
+                && g.members.some((id) => id?.toString?.() === currentUserId)
+            ),
             activities: Array.isArray(g.activities)
                 ? g.activities.map((activity) => ({
                     ...activity,
-                    activityIdString: activity.activityId?.toString?.() || ''
+                    activityIdString: activity.activityId?.toString?.() || '',
+                    voteCount: Number(activity.voteCount) || 0,
+                    votedByCurrentUser: Boolean(
+                        currentUserId
+                        && Array.isArray(activity.votedUserIds)
+                        && activity.votedUserIds.some((voterId) => voterId?.toString?.() === currentUserId)
+                    )
                 }))
                 : []
         }));
-        res.render('activities', { movies, games, groups });
+        res.render('activities', { movies, games, groups, isAdmin });
     } catch (err) {
         res.status(500).render('activities', { error: 'Failed to load activities' });
     }
-});
+};
+
+router.get('/groups',
+    /*
+    #swagger.tags = ['Groups']
+    #swagger.description = 'Render the groups page'
+    */
+    renderGroupsPage
+);
 
 module.exports = router;
