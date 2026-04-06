@@ -5,7 +5,6 @@
 
 
 {{#if canViewGroups}}
-<h1>Groups</h1>
     {{#if isAdmin}}
     <div class="group-actions">
         <button class="btn" id="createGroupBtn" type="button">Create a Group</button>
@@ -38,17 +37,20 @@
                                 <li class="group-activity-item">
                                     <span>{{#if title}}{{title}} ({{activityType}}){{else}}{{this}}{{/if}} - Votes: {{voteCount}}</span>
                                     <div class="group-activity-actions">
+                                        {{#if ../this.isMember}}
+                                        {{#unless ../this.isFinished}}
                                         <button
                                             class="btn vote-activity-btn"
                                             type="button"
                                             data-group-id="{{../this._id}}"
                                             data-activity-id="{{activityIdString}}"
                                             data-activity-type="{{activityType}}"
-                                            {{#if ../this.isFinished}}disabled{{/if}}
                                             {{#if votedByCurrentUser}}disabled{{/if}}
                                         >
                                             +1 Vote
                                         </button>
+                                        {{/unless}}
+                                        {{/if}}
                                         {{#if @root.isAdmin}}
                                             <button
                                                 class="btn remove-activity-btn"

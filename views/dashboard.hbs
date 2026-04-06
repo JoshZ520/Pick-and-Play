@@ -4,66 +4,17 @@
 
 <h1>Dashboard</h1>
 
-<section class="my-groups">
-    <h2>My Groups</h2>
-    <p>These are the groups you have already joined.</p>
-    {{#if myGroups.length}}
-        <ul class="my-groups-list">
-            {{#each myGroups}}
-                <li class="my-group-item">{{groupName}}</li>
-            {{/each}}
-        </ul>
+<section class="profile-summary">
+    <h2>Your Profile</h2>
+    <p><strong>Username:</strong> {{userProfile.username}}</p>
+    <p><strong>Email:</strong> {{userProfile.email}}</p>
+    {{#if isAdmin}}
+        <p><strong>Role:</strong> Admin</p>
     {{else}}
-        <p>You have not joined any groups yet.</p>
+        <p><strong>Role:</strong> Member</p>
     {{/if}}
 </section>
 
-{{#if movies}}
-    <div class="movies-grid">
-        <h2>Movies</h2>
-        <p>Browse movie options that can be picked for a group.</p>
-        {{#each movies}}
-            <div class="movie-card">
-                <img src="/images/movies/{{imageURL}}" alt="{{title}}" class="movie-image">
-                <h2>{{title}}</h2>
-                <p><strong>Genre:</strong> {{genre}}</p>
-                <p><strong>Rating:</strong> {{rating}}</p>
-                <p><strong>Runtime:</strong> {{runtime}} minutes</p>
-                <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button>
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No movies available yet. Check back soon!</p>
-{{/if}}
-
-
-{{#if games}}
-    <div class="games">
-        <h2>Games</h2>
-        <p>Browse game options that can be picked for a group.</p>
-        {{#each games}}
-            <div class="game-card">
-                {{#if imageURL}}
-                    <img src="/images/games/{{imageURL}}" alt="{{title}}" class="game-image">
-                {{/if}}
-                <h2>{{title}}</h2>
-                <p><strong>Genre:</strong> {{genre}}</p>
-                <p><strong>Min Players:</strong> {{minPlayers}}</p>
-                <p><strong>Max Players:</strong> {{maxPlayers}}</p>
-                <p><strong>Playtime:</strong> {{playtime}} minutes</p>
-                <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Game</button>
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No games available yet. Check back soon!</p>
-{{/if}}
-
-
-
-<button id="logout-btn">Logout</button>
+<button id="logout-btn" class="btn">Log Out</button>
 
 <script src="/js/dashboard.js"></script>
