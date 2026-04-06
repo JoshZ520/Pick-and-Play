@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updatePasswordRequirements = (value) => {
         if (reqLength) {
-            reqLength.className = value.length >= 12 ? 'valid' : 'invalid';
+            reqLength.className = value.length >= 8 ? 'valid' : 'invalid';
         }
         if (reqNumber) {
             reqNumber.className = /\d/.test(value) ? 'valid' : 'invalid';
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirmPasswordValue = confirmPasswordInput.value;
 
         const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
-        const lengthValid = passwordValue.length >= 12;
+        const lengthValid = passwordValue.length >= 8;
         const numberValid = /\d/.test(passwordValue);
         const specialValid = /[!@#$%^&*(),.?"{}|<>]/.test(passwordValue);
         const passwordsMatch = passwordValue === confirmPasswordValue;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!usernameValue) messages.push('Username is required.');
         if (!emailValid) messages.push('Please enter a valid email address.');
-        if (!lengthValid) messages.push('Password must be at least 12 characters.');
+        if (!lengthValid) messages.push('Password must be at least 8 characters.');
         if (!numberValid) messages.push('Password must contain at least one number.');
         if (!specialValid) messages.push('Password must contain at least one special character.');
         if (!passwordsMatch) messages.push('Passwords do not match.');
