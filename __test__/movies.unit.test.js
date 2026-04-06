@@ -1,5 +1,4 @@
 const movieController = require('../controllers/movies');
-const gameController = require('../controllers/games');
 const { getDb } = require('../DB/connect');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -105,48 +104,17 @@ test('deleteMovie returns 404 if movie not found', async() => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'No movie found to delete' }));
 });
 
-// test('allGames returns list with status 200', async () => {
-//     const DBMock = {
-//         collection: jest.fn().mockReturnThis(),
-//         find: jest.fn().mockReturnThis(),
-//         toArray: jest.fn().mockResolvedValue([{ title: 'A' }, { title: 'B' }])
-//     };
-//     getDb.mockReturnValue(DBMock);
-
-//     const req = {};
-//     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-//     await gameController.allGames(req, res);
-//     expect(res.status).toHaveBeenCalledWith(200);
-//     expect(res.json).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ title: 'A' })]));
-// });
-
-// test('singleGame returns 200 when movie exists', async() => {
-//     const id = new ObjectId().toHexString();
-//     const DBMock = {
-//         collection: jest.fn().mockReturnThis(),
-//         find: jest.fn().mockReturnThis(),
-//         toArray: jest.fn().mockResolvedValue([{ _id: new ObjectId(id), title: 'Found' }])
-//     };
-//     getDb.mockReturnValue(DBMock);
-
-//     const req = { params: { id } };
-//     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-//     await gameController.singleGame(req, res);
-//     expect(res.status).toHaveBeenCalledWith(200);
-//     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ title: 'Found' }));
-// });
-
-// test('createGame returns 201 on success', async() => {
-//     const newGameId = new ObjectId();
-//     const DBMock = {
-//         collection: jest.fn().mockReturnThis(),
-//         insertOne: jest.fn().mockResolvedValue({ acknowledged: true, insertedId: newGameId })
-//     };
-//     getDb.mockReturnValue(DBMock);
-//     const req = { body: { title: 'Monopoly', genre: 'Board Game', rating: 'PG-13', playtime: '2h12m', minPlayers: 2, maxPlayers: 6, description:'A classic board game where players buy and trade properties to bankrupt their opponents.', imageURL:'https://example.com/monopoly.jpg' } };
-//     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-//     await gameController.createGame(req, res);
-//     expect(res.status).toHaveBeenCalledWith(201);
-//     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ acknowledged: true, insertedId: newGameId }));
-// });
+test('createNewMovie returns 500 on database error', async() => {
+    const DBMock = {
+        collection: jest.fn().mockReturnThis(),
+        insertOne: jest.fn().mockRejectedValue(new Error('Some error occurred while creating the movie'))
+    };
+    getDb.mockReturnValue(DBMock);
+    const req = { body: { title: 'The Avengers', genre: 'Action', rating: 'PG-13', runtime: '2h12m', description:'A group of superheroes must come together to stop a global threat.', imageURL: 'jenjf.jpg' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await movieController.createNewMovie(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Some error occurred while creating the movie' }));
+}
+);
 

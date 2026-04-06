@@ -96,3 +96,18 @@ test('deleteGame returns 200 on success', async() => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith();
 });
+
+test('deleteGame returns 404 when game not found', async() => {
+    const id = new ObjectId().toHexString();
+    const DBMock = {
+        collection: jest.fn().mockReturnThis(),
+        deleteOne: jest.fn().mockResolvedValue({ acknowledged: true, deletedCount: 0 })
+    };
+    getDb.mockReturnValue(DBMock);
+    const req = { params: { id } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await gameController.deleteGame(req, res);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'No game found to delete' }));
+}
+);

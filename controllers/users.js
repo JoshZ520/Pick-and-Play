@@ -74,9 +74,17 @@ const logout = (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Error logging out' });
         }
-        // For API calls, return JSON success
-        // Session is destroyed, redirect happens on client side
-        res.status(200).json({ message: 'Logout successful' });
+        // Destroy session if present, then respond
+        if (req.session && typeof req.session.destroy === 'function') {
+            req.session.destroy((destroyErr) => {
+                if (destroyErr) {
+                    return res.status(500).json({ error: 'Error destroying session' });
+                }
+                res.status(200).json({ message: 'Logout successful' });
+            });
+        } else {
+            res.status(200).json({ message: 'Logout successful' });
+        }
     });
 };
 
