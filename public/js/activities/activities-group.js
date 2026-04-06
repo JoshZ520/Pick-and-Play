@@ -3,6 +3,8 @@ window.PickAndPlayActivities = window.PickAndPlayActivities || {};
 window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
     const addActivityBtns = document.querySelectorAll('.add-activity-btn');
     const removeActivityBtns = document.querySelectorAll('.remove-activity-btn');
+    const voteActivityBtns = document.querySelectorAll('.vote-activity-btn');
+    const finishGroupBtns = document.querySelectorAll('.finish-group-btn');
     const createGroupActivityInputs = document.querySelectorAll('.create-group-activity');
 
     const getErrorMessage = async (response, fallbackMessage) => {
@@ -41,7 +43,7 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
             .map((input) => ({ activityType: input.dataset.activityType, activityId: input.value }));
 
         try {
-            await sendJsonRequest('/groups', {
+            await sendJsonRequest('/api/groups', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ groupName, winVote: 0, activities: selectedActivities })
@@ -64,7 +66,7 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
         }
 
         try {
-            await sendJsonRequest(`/groups/${groupId}`, { method: 'DELETE' }, 'Failed to delete group');
+            await sendJsonRequest(`/api/groups/${groupId}`, { method: 'DELETE' }, 'Failed to delete group');
             modalApi.closeDeleteGroupModal();
             window.location.reload();
         } catch (err) {
@@ -87,7 +89,7 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
         }
 
         try {
-            await sendJsonRequest(`/groups/${groupId}/activities`, {
+            await sendJsonRequest(`/api/groups/${groupId}/activities`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ activityType: selectedType, activityId: selectedActivityId })
@@ -117,9 +119,51 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
             }
 
             try {
-                await sendJsonRequest(`/groups/${groupId}/activities/${activityType}/${activityId}`, {
+                await sendJsonRequest(`/api/groups/${groupId}/activities/${activityType}/${activityId}`, {
                     method: 'DELETE'
                 }, 'Failed to remove activity');
+
+                window.location.reload();
+            } catch (err) {
+                window.alert(err.message);
+            }
+        });
+    });
+
+    voteActivityBtns.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const { groupId, activityId, activityType } = button.dataset;
+            if (!groupId || !activityId || !activityType) {
+                return;
+            }
+
+            try {
+                await sendJsonRequest(`/api/groups/${groupId}/activities/${activityType}/${activityId}/vote`, {
+                    method: 'POST'
+                }, 'Failed to vote on activity');
+
+                window.location.reload();
+            } catch (err) {
+                window.alert(err.message);
+            }
+        });
+    });
+
+    finishGroupBtns.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const groupId = button.dataset.groupId;
+            if (!groupId) {
+                return;
+            }
+
+            try {
+                await sendJsonRequest(`/api/groups/${groupId}/finish`, {
+                    method: 'POST'
+                }, 'Failed to finish voting');
 
                 window.location.reload();
             } catch (err) {

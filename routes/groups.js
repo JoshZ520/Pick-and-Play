@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const groupController = require('../controllers/groups');
-const { isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 //Gets all groups
 /*
@@ -103,8 +103,15 @@ router.delete('/:id/activities/:activityType/:activityId',
 	#swagger.responses[200] = { description: 'Activity removed from group' }
 	#swagger.responses[404] = { description: 'Group not found' }
 	*/
+	isAdmin,
 	groupController.removeActivityFromGroup
 );
+
+// Vote +1 on a group activity (one vote per user)
+router.post('/:id/activities/:activityType/:activityId/vote', isAuthenticated, groupController.voteOnActivity);
+
+// Finish voting and lock group
+router.post('/:id/finish', isAdmin, groupController.finishGroupVoting);
 
 //Updates group
 router.put('/:id', groupController.updateGroup);

@@ -31,19 +31,46 @@
                         <ul class="group-activities-list">
                             {{#each this.activities}}
                                 <li class="group-activity-item">
-                                    <span>{{#if title}}{{title}} ({{activityType}}){{else}}{{this}}{{/if}}</span>
-                                    <button
-                                        class="btn remove-activity-btn"
-                                        type="button"
-                                        data-group-id="{{../this._id}}"
-                                        data-activity-id="{{activityIdString}}"
-                                        data-activity-type="{{activityType}}"
-                                    >
-                                        Remove
-                                    </button>
+                                    <span>{{#if title}}{{title}} ({{activityType}}){{else}}{{this}}{{/if}} - Votes: {{voteCount}}</span>
+                                    <div class="group-activity-actions">
+                                        <button
+                                            class="btn vote-activity-btn"
+                                            type="button"
+                                            data-group-id="{{../this._id}}"
+                                            data-activity-id="{{activityIdString}}"
+                                            data-activity-type="{{activityType}}"
+                                            {{#if ../this.isFinished}}disabled{{/if}}
+                                            {{#if votedByCurrentUser}}disabled{{/if}}
+                                        >
+                                            +1 Vote
+                                        </button>
+                                        {{#if @root.isAdmin}}
+                                            <button
+                                                class="btn remove-activity-btn"
+                                                type="button"
+                                                data-group-id="{{../this._id}}"
+                                                data-activity-id="{{activityIdString}}"
+                                                data-activity-type="{{activityType}}"
+                                            >
+                                                Remove
+                                            </button>
+                                        {{/if}}
+                                    </div>
                                 </li>
                             {{/each}}
                         </ul>
+
+                        {{#if this.isFinished}}
+                            <p><strong>Voting finished.</strong>
+                                {{#if this.winningActivity}}
+                                    Winner: {{this.winningActivity.title}} ({{this.winningActivity.activityType}}) with {{this.winningActivity.voteCount}} votes.
+                                {{/if}}
+                            </p>
+                        {{else}}
+                            {{#if @root.isAdmin}}
+                                <button class="btn finish-group-btn" type="button" data-group-id="{{this._id}}">Finish Voting</button>
+                            {{/if}}
+                        {{/if}}
                     </div>
                 {{else}}
                     <p>No activities added yet.</p>
