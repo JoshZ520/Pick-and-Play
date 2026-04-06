@@ -65,6 +65,24 @@ router.patch('/users/:id/role',
     /*
     #swagger.tags = ['Authentication']
     #swagger.description = 'Update a user role (admin only)'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'User id',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'New role payload',
+        required: true,
+        schema: {
+            roleID: 2
+        }
+    }
+    #swagger.responses[200] = { description: 'User role updated successfully' }
+    #swagger.responses[400] = { description: 'Invalid user id or invalid role value' }
+    #swagger.responses[403] = { description: 'Admin only' }
+    #swagger.responses[404] = { description: 'User not found' }
     */
     isAdmin,
     userController.updateUserRole);
