@@ -9,6 +9,17 @@ router.use('/auth', require('./auth'));
 router.use('/api/groups', require('./groups'));
 router.use('/games', require('./games'));
 
+const getMyGroups = (groups, currentUserId) => {
+    if (!currentUserId || !Array.isArray(groups)) {
+        return [];
+    }
+
+    return groups.filter((group) =>
+        Array.isArray(group.members)
+        && group.members.some((memberId) => memberId?.toString?.() === currentUserId)
+    );
+};
+
 //@desc     Login/Landing page
 //@route    GET /
 router.get('/login', (req, res) => {
@@ -63,9 +74,7 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
         }));
 
         const currentUserId = req.user?._id?.toString();
-        const myGroups = groups.filter((group) =>
-            Array.isArray(group.members) && group.members.some((memberId) => memberId?.toString() === currentUserId)
-        );
+        const myGroups = getMyGroups(groups, currentUserId);
         
         const isAdmin = req.user && req.user.roleID === 2;
         res.render('dashboard', { movies, games, groups, myGroups, isAdmin });
@@ -117,14 +126,10 @@ const renderGroupsPage = async (req, res) => {
                 }))
                 : []
         }));
-        const currentUserId = req.user?._id?.toString();
-        const myGroups = groups.filter((group) =>
-            Array.isArray(group.members) && group.members.some((memberId) => memberId?.toString() === currentUserId)
-        );
-        const isAdmin = req.user && req.user.roleID === 2;
-        res.render('activities', { movies, games, groups, myGroups, isAdmin });
+        const myGroups = getMyGroups(groups, currentUserId);
+        res.render('groups', { movies, games, groups, myGroups, isAdmin });
     } catch (err) {
-        res.status(500).render('activities', { error: 'Failed to load activities' });
+        res.status(500).render('groups', { error: 'Failed to load groups' });
     }
 };
 
