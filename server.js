@@ -56,6 +56,11 @@ app
     // Must come AFTER session middleware
     .use(passport.initialize())  // Initialize Passport
     .use(passport.session())     // Use Passport for session management
+    .use((req, res, next) => {
+        res.locals.isLoggedIn = typeof req.isAuthenticated === 'function' && req.isAuthenticated();
+        res.locals.currentUser = req.user || null;
+        next();
+    })
     .use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
     .use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
