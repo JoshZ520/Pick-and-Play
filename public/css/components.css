@@ -15,7 +15,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.group-card,
 .game-card {
     margin-top: 12px;
     display: flex;
@@ -64,6 +63,25 @@
     gap: 12px;
     margin: 16px 0;
     flex-wrap: wrap;
+}
+
+.nav-logout-form {
+    margin: 0;
+    display: inline;
+}
+
+.nav-logout-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+    text-decoration: none;
+}
+
+.nav-logout-btn:hover {
+    color: #EED2CC;
 }
 
 .my-groups {
