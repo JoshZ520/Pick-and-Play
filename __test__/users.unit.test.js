@@ -63,24 +63,34 @@ test('register returns 201 on successful registration', async () => {
     expect(res.redirect).toHaveBeenCalledWith('/dashboard');
 });
 
-//test this out
+
 test('login returns 200 with user data on successful login', async () => {
     const req = { user: { username: 'loggedInUser', email: 'loggedin@example.com' } };
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     await usersController.login(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ username: 'loggedInUser', email: 'loggedin@example.com' }));
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Login successful', user: { email: 'loggedin@example.com', id: undefined, roleID: undefined,  username: 'loggedInUser', }}));
 });
 
 
 
 test('logout returns 200 on successful logout', async () => {
-    const req = { logout: jest.fn(), session: { destroy: jest.fn() } };
+    const req = {};
+    req.session = { destroy: jest.fn(cb => cb()) };
+    req.logout = jest.fn(cb => cb());
     const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     await usersController.logout(req, res);
     expect(req.logout).toHaveBeenCalled();
     expect(req.session.destroy).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Logout successful' }));
+});
+
+test('getCurrentUser returns 200 with user data if authenticated', async () => {
+    const req = { isAuthenticated: () => true, user: { username: 'currentUser', email: 'currentUser@test.com' } };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await usersController.getCurrentUser(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ user: { email: 'currentUser@test.com', id: undefined, roleID: undefined, username: 'currentUser' } }));
 });
 
