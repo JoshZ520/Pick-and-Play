@@ -8,10 +8,12 @@
 <p id="votes-display">Votes: 0 / 7</p>
 <button id="add-btn" class="btn">Add 1</button>
 
+{{#if isAdmin}}
 <div class="group-actions">
     <button class="btn" id="createGroupBtn" type="button">Create a Group</button>
     <button class="btn" id="deleteGroupBtn" type="button" {{#unless groups}}disabled{{/unless}}>Delete a Group</button>
 </div>
+{{/if}}
 
 {{> groupModals}}
 
@@ -24,7 +26,12 @@
             <div class="group-card">
                 <h3>{{#if this.groupName}}{{this.groupName}}{{else}}Unnamed Group{{/if}}</h3>
                 <p>Votes: {{this.votes}} / {{this.winVote}}</p>
+                {{#unless this.isMember}}
+                <button class="btn join-group-btn" type="button" data-id="{{this._id}}">Join Group</button>
+                {{/unless}}
+                {{#if @root.isAdmin}}
                 <button class="btn add-activity-btn" type="button" data-group-id="{{this._id}}" data-group-name="{{this.groupName}}">Add Activity</button>
+                {{/if}}
                 {{#if this.activities.length}}
                     <div class="group-activities">
                         <p><strong>Activities:</strong></p>

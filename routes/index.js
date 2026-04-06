@@ -98,6 +98,11 @@ const renderGroupsPage = async (req, res) => {
             winVote: g.winVote ?? 0,
             isFinished: Boolean(g.isFinished),
             winningActivity: g.winningActivity || null,
+            isMember: Boolean(
+                currentUserId
+                && Array.isArray(g.members)
+                && g.members.some((id) => id?.toString?.() === currentUserId)
+            ),
             activities: Array.isArray(g.activities)
                 ? g.activities.map((activity) => ({
                     ...activity,
@@ -117,7 +122,12 @@ const renderGroupsPage = async (req, res) => {
     }
 };
 
-router.get('/groups', renderGroupsPage);
-router.get('/activities', (req, res) => res.redirect('/groups'));
+router.get('/groups',
+    /*
+    #swagger.tags = ['Groups']
+    #swagger.description = 'Render the groups page'
+    */
+    renderGroupsPage
+);
 
 module.exports = router;

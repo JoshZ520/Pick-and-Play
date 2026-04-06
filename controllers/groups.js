@@ -115,41 +115,6 @@ const createGroup = async (req, res, next) => {
     }
 };
 
-const updateGroup = async (req, res, next) => {
-    if (!ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({ error: 'Must use a valid group id'});
-    }
-
-    const groupId = new ObjectId(req.params.id);
-    try {
-        const members = Array.isArray(req.body.members) ? req.body.members : undefined;
-        const activities = Array.isArray(req.body.activities) ? req.body.activities : undefined;
-
-        const groupUpdates = {
-            groupName: req.body.groupName,
-            votes: req.body.votes,
-            winVote: req.body.winVote,
-            members,
-            activities
-        };
-
-        Object.keys(groupUpdates).forEach((key) => {
-            if (groupUpdates[key] === undefined) {
-                delete groupUpdates[key];
-            }
-        });
-
-        const result = await getDb().collection('groups').updateOne({ _id: groupId }, { $set: groupUpdates });
-        if (result.modifiedCount > 0) {
-            res.status(204).send();
-        } else {
-            res.status(404).json({ message: 'No group found to update' });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
 const deleteGroup = async (req, res, next) => {
     if (!ObjectId.isValid(req.params.id)) {
         return res.status(400).json({ error: 'Must use a valid group id'});
@@ -428,7 +393,6 @@ module.exports = {
     allGroups,
     singleGroup,
     createGroup,
-    updateGroup,
     deleteGroup,
     joinGroup,
     addActivityToGroup,

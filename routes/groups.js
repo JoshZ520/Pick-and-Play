@@ -108,15 +108,32 @@ router.delete('/:id/activities/:activityType/:activityId',
 );
 
 // Vote +1 on a group activity (one vote per user)
-router.post('/:id/activities/:activityType/:activityId/vote', isAuthenticated, groupController.voteOnActivity);
+router.post('/:id/activities/:activityType/:activityId/vote',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Vote +1 on a group activity. One vote per user per activity.'
+	#swagger.responses[200] = { description: 'Vote recorded' }
+	#swagger.responses[400] = { description: 'Already voted or group is finished' }
+	#swagger.responses[401] = { description: 'Not authenticated' }
+	*/
+	isAuthenticated, groupController.voteOnActivity);
 
 // Finish voting and lock group
-router.post('/:id/finish', isAdmin, groupController.finishGroupVoting);
-
-//Updates group
-router.put('/:id', groupController.updateGroup);
+router.post('/:id/finish',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Finish voting for a group and lock it (admin only)'
+	#swagger.responses[200] = { description: 'Voting finished and winner determined' }
+	#swagger.responses[403] = { description: 'Admin only' }
+	*/
+	isAdmin, groupController.finishGroupVoting);
 
 //Delete group
-router.delete('/:id', groupController.deleteGroup);
+router.delete('/:id',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Delete a group by id'
+	*/
+	groupController.deleteGroup);
 
 module.exports = router;

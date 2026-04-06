@@ -52,9 +52,12 @@
         }
       }
     },
-    "/activities": {
+    "/groups": {
       "get": {
-        "description": "",
+        "tags": [
+          "Groups"
+        ],
+        "description": "Render the groups page",
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -64,7 +67,10 @@
     },
     "/movies/": {
       "post": {
-        "description": "",
+        "tags": [
+          "Movies"
+        ],
+        "description": "Create a new movie (admin only)",
         "parameters": [
           {
             "name": "body",
@@ -110,7 +116,10 @@
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "Movies"
+        ],
+        "description": "Get all movies",
         "responses": {
           "200": {
             "description": "OK"
@@ -123,7 +132,10 @@
     },
     "/movies/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Movies"
+        ],
+        "description": "Update a movie by id (admin only)",
         "parameters": [
           {
             "name": "id",
@@ -181,7 +193,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Movies"
+        ],
+        "description": "Delete a movie by id (admin only)",
         "parameters": [
           {
             "name": "id",
@@ -212,7 +227,10 @@
         }
       },
       "get": {
-        "description": "",
+        "tags": [
+          "Movies"
+        ],
+        "description": "Get a single movie by id",
         "parameters": [
           {
             "name": "id",
@@ -237,22 +255,12 @@
         }
       }
     },
-    "/auth/create-test-user": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/auth/register": {
       "post": {
-        "description": "",
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Register a new user account",
         "parameters": [
           {
             "name": "body",
@@ -290,7 +298,10 @@
     },
     "/auth/login": {
       "post": {
-        "description": "",
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Authenticate user with email and password",
         "parameters": [
           {
             "name": "body",
@@ -321,7 +332,10 @@
     },
     "/auth/logout": {
       "post": {
-        "description": "",
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Log out the currently authenticated user",
         "responses": {
           "200": {
             "description": "OK"
@@ -334,7 +348,10 @@
     },
     "/auth/me": {
       "get": {
-        "description": "",
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Get the currently authenticated user profile",
         "responses": {
           "200": {
             "description": "OK"
@@ -371,7 +388,7 @@
         }
       }
     },
-    "/groups/": {
+    "/api/groups/": {
       "get": {
         "description": "",
         "responses": {
@@ -438,7 +455,7 @@
         }
       }
     },
-    "/groups/{id}": {
+    "/api/groups/{id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -464,57 +481,11 @@
           }
         }
       },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "members": {
-                  "example": "any"
-                },
-                "activities": {
-                  "example": "any"
-                },
-                "groupName": {
-                  "example": "any"
-                },
-                "votes": {
-                  "example": "any"
-                },
-                "winVote": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
       "delete": {
-        "description": "",
+        "tags": [
+          "Groups"
+        ],
+        "description": "Delete a group by id",
         "parameters": [
           {
             "name": "id",
@@ -539,7 +510,7 @@
         }
       }
     },
-    "/groups/{id}/join": {
+    "/api/groups/{id}/join": {
       "post": {
         "tags": [
           "Groups"
@@ -572,7 +543,7 @@
         }
       }
     },
-    "/groups/{id}/activities": {
+    "/api/groups/{id}/activities": {
       "post": {
         "tags": [
           "Groups"
@@ -615,13 +586,16 @@
           "404": {
             "description": "Not Found"
           },
+          "409": {
+            "description": "Conflict"
+          },
           "500": {
             "description": "Internal Server Error"
           }
         }
       }
     },
-    "/groups/{id}/activities/{activityType}/{activityId}": {
+    "/api/groups/{id}/activities/{activityType}/{activityId}": {
       "delete": {
         "tags": [
           "Groups"
@@ -661,6 +635,12 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Group not found"
           },
@@ -670,9 +650,96 @@
         }
       }
     },
+    "/api/groups/{id}/activities/{activityType}/{activityId}/vote": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Vote +1 on a group activity. One vote per user per activity.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "activityType",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vote recorded"
+          },
+          "400": {
+            "description": "Already voted or group is finished"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/finish": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Finish voting for a group and lock it (admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Voting finished and winner determined"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin only"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/games/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Games"
+        ],
+        "description": "Get all games",
         "responses": {
           "200": {
             "description": "OK"
@@ -683,7 +750,10 @@
         }
       },
       "post": {
-        "description": "",
+        "tags": [
+          "Games"
+        ],
+        "description": "Create a new game (admin only)",
         "parameters": [
           {
             "name": "body",
@@ -734,7 +804,10 @@
     },
     "/games/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Games"
+        ],
+        "description": "Get a single game by id",
         "parameters": [
           {
             "name": "id",
@@ -759,7 +832,10 @@
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Games"
+        ],
+        "description": "Update a game by id (admin only)",
         "parameters": [
           {
             "name": "id",
@@ -820,7 +896,10 @@
         }
       },
       "delete": {
-        "description": "",
+        "tags": [
+          "Games"
+        ],
+        "description": "Delete a game by id (admin only)",
         "parameters": [
           {
             "name": "id",

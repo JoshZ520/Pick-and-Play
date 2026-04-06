@@ -68,31 +68,7 @@
     <p>No games available yet. Check back soon!</p>
 {{/if}}
 
-{{#if groups}}
-    <div class="groups">
-        <h2>Groups</h2>
-        <p>Browse all available groups, see who is in them, and join one when you are ready.</p>
-        {{#each groups}}
-            <div class="group-card">
-                {{#if groupName}}
-                    <h3>{{groupName}}</h3>
-                    <p>Winning Vote: {{votes}} / {{winVote}}</p>
-                    <p><strong>Members:</strong>
-                        {{#each memberDetails}}
-                            {{#unless @first}}, {{/unless}}{{username}}{{#if isAdmin}} (Admin){{/if}}
-                        {{else}}
-                            None
-                        {{/each}}
-                    </p>
-                    <button class="btn">Add Activity</button>
-                    <button class="btn join-group-btn" data-id="{{_id}}">Join Group</button>
-                {{/if}}
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No groups available yet. Check back soon!</p>
-{{/if}}
+
 
 <button id="logout-btn">Logout</button>
 

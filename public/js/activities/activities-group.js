@@ -2,6 +2,7 @@ window.PickAndPlayActivities = window.PickAndPlayActivities || {};
 
 window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
     const addActivityBtns = document.querySelectorAll('.add-activity-btn');
+    const joinGroupBtns = document.querySelectorAll('.join-group-btn');
     const removeActivityBtns = document.querySelectorAll('.remove-activity-btn');
     const voteActivityBtns = document.querySelectorAll('.vote-activity-btn');
     const finishGroupBtns = document.querySelectorAll('.finish-group-btn');
@@ -106,6 +107,27 @@ window.PickAndPlayActivities.bindGroupActions = (elements, modalApi) => {
         button.addEventListener('click', (event) => {
             event.preventDefault();
             modalApi.openAddActivityModal(button.dataset.groupId, button.dataset.groupName || '');
+        });
+    });
+
+    joinGroupBtns.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+            const groupId = button.getAttribute('data-id');
+            try {
+                const response = await fetch(`/api/groups/${groupId}/join`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || errorData.message || 'Failed to join group');
+                }
+                alert('Successfully joined group!');
+                window.location.reload();
+            } catch (err) {
+                alert(`Error joining group: ${err.message}`);
+            }
         });
     });
 

@@ -1,0 +1,344 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Pick-and-Play API - Groups",
+    "description": "Pick-and-Play API",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Groups"
+    }
+  ],
+  "paths": {
+    "/groups": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Render the groups page",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Create a new group",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Group payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "groupName": {
+                  "type": "string",
+                  "example": "Friday Night Group"
+                },
+                "winVote": {
+                  "type": "string",
+                  "example": "None yet"
+                },
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "activityType": {
+                        "type": "string",
+                        "example": "game"
+                      },
+                      "activityId": {
+                        "type": "string",
+                        "example": "507f1f77bcf86cd799439012"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Group created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Delete a group by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/join": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Join a group as the currently logged-in user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Joined group successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/activities": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Add a movie or game to a group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Activity payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "activityType": {
+                  "type": "string",
+                  "example": "movie"
+                },
+                "activityId": {
+                  "type": "string",
+                  "example": "507f1f77bcf86cd799439011"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/activities/{activityType}/{activityId}": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Remove a movie or game from a group",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Group id"
+          },
+          {
+            "name": "activityType",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Activity type to remove",
+            "enum": [
+              "movie",
+              "game"
+            ]
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Activity id to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activity removed from group"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/activities/{activityType}/{activityId}/vote": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Vote +1 on a group activity. One vote per user per activity.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "activityType",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vote recorded"
+          },
+          "400": {
+            "description": "Already voted or group is finished"
+          },
+          "401": {
+            "description": "Not authenticated"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/finish": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Finish voting for a group and lock it (admin only)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Voting finished and winner determined"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin only"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}
