@@ -63,9 +63,7 @@
         <p>Browse movie options that can be picked for a group.</p>
         {{#each movies}}
             <div class="movie-card">
-                {{#if imageURL}}
-                    <img src="{{imageURL}}" alt="{{title}}" class="movie-image">
-                {{/if}}
+                <img src="/images/movies/{{imageURL}}" alt="{{title}}" class="movie-image">
                 <h2>{{title}}</h2>
                 <p><strong>Genre:</strong> {{genre}}</p>
                 <p><strong>Rating:</strong> {{rating}}</p>
@@ -85,9 +83,7 @@
         <p>Browse game options that can be picked for a group.</p>
         {{#each games}}
             <div class="game-card">
-                {{#if imageURL}}
-                    <img src="{{imageURL}}" alt="{{title}}" class="game-image">
-                {{/if}}
+                <img src="/images/games/{{imageURL}}" alt="{{title}}" class="game-image">
                 <h2>{{title}}</h2>
                 <p><strong>Genre:</strong> {{genre}}</p>
                 <p><strong>Min Players:</strong> {{minPlayers}}</p>

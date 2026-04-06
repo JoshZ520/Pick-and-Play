@@ -79,7 +79,8 @@ router.get('/dashboard', isAuthenticated, async (req,res) => {
 router.get('/', async (req,res) => {
     try {
         const movies = await getDb().collection('movies').find().toArray();
-        res.render('home', { movies });
+        const games = await getDb().collection('games').find().toArray();
+        res.render('home', { movies, games });
     } catch (err) {
         res.status(500).render('home', { error: 'Failed to load movies' });
     }
@@ -101,7 +102,12 @@ router.get('/activities', async (req,res) => {
                 }))
                 : []
         }));
-        res.render('activities', { movies, games, groups });
+        const currentUserId = req.user?._id?.toString();
+        const myGroups = groups.filter((group) =>
+            Array.isArray(group.members) && group.members.some((memberId) => memberId?.toString() === currentUserId)
+        );
+        const isAdmin = req.user && req.user.roleID === 2;
+        res.render('activities', { movies, games, groups, myGroups, isAdmin });
     } catch (err) {
         res.status(500).render('activities', { error: 'Failed to load activities' });
     }
