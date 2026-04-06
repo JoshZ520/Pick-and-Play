@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const groupController = require('../controllers/groups');
-const { isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, isAdmin } = require('../middleware/auth');
 
 //Gets all groups
 /*
@@ -28,7 +28,17 @@ router.post('/',
 		required: true,
 		schema: {
 			groupName: 'Friday Night Group',
-			winVote: 'None yet'
+			winVote: 'None yet',
+			activities: [
+				{
+					activityType: 'movie',
+					activityId: '507f1f77bcf86cd799439011'
+				},
+				{
+					activityType: 'game',
+					activityId: '507f1f77bcf86cd799439012'
+				}
+			]
 		}
 	}
 	#swagger.responses[201] = { description: 'Group created' }
@@ -67,12 +77,63 @@ router.post('/:id/activities',
 );
 
 // Remove a movie or game from a group
-router.delete('/:id/activities/:activityType/:activityId', groupController.removeActivityFromGroup);
+router.delete('/:id/activities/:activityType/:activityId',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Remove a movie or game from a group'
+	#swagger.parameters['id'] = {
+		in: 'path',
+		description: 'Group id',
+		required: true,
+		type: 'string'
+	}
+	#swagger.parameters['activityType'] = {
+		in: 'path',
+		description: 'Activity type to remove',
+		required: true,
+		type: 'string',
+		enum: ['movie', 'game']
+	}
+	#swagger.parameters['activityId'] = {
+		in: 'path',
+		description: 'Activity id to remove',
+		required: true,
+		type: 'string'
+	}
+	#swagger.responses[200] = { description: 'Activity removed from group' }
+	#swagger.responses[404] = { description: 'Group not found' }
+	*/
+	isAdmin,
+	groupController.removeActivityFromGroup
+);
 
-//Updates group
-router.put('/:id', groupController.updateGroup);
+// Vote +1 on a group activity (one vote per user)
+router.post('/:id/activities/:activityType/:activityId/vote',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Vote +1 on a group activity. One vote per user per activity.'
+	#swagger.responses[200] = { description: 'Vote recorded' }
+	#swagger.responses[400] = { description: 'Already voted or group is finished' }
+	#swagger.responses[401] = { description: 'Not authenticated' }
+	*/
+	isAuthenticated, groupController.voteOnActivity);
+
+// Finish voting and lock group
+router.post('/:id/finish',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Finish voting for a group and lock it (admin only)'
+	#swagger.responses[200] = { description: 'Voting finished and winner determined' }
+	#swagger.responses[403] = { description: 'Admin only' }
+	*/
+	isAdmin, groupController.finishGroupVoting);
 
 //Delete group
-router.delete('/:id', groupController.deleteGroup);
+router.delete('/:id',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Delete a group by id'
+	*/
+	groupController.deleteGroup);
 
 module.exports = router;

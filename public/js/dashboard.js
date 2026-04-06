@@ -2,18 +2,41 @@
 
 // Handle logout button click
 document.addEventListener('DOMContentLoaded', () => {
-    const votesDisplay = document.getElementById('votes-display');
-    const addBtn = document.getElementById('add-btn');
     const logoutBtn = document.getElementById('logout-btn');
-    const joinGroupBtns = document.querySelectorAll('.join-group-btn');
-    let votes = 0;
+    const manageRolesBtn = document.getElementById('manageRolesBtn');
+    const manageRolesModal = document.getElementById('manageRolesModal');
+    const closeManageRolesModalBtn = document.getElementById('closeManageRolesModal');
+    const manageRolesForm = document.getElementById('manageRolesForm');
+    const manageRolesFormError = document.getElementById('manageRolesFormError');
+    const roleUserSelect = document.getElementById('roleUserSelect');
+    const roleValueSelect = document.getElementById('roleValueSelect');
 
-    if (addBtn && votesDisplay) {
-        addBtn.addEventListener('click', () => {
-            votes += 1;
-            votesDisplay.textContent = `Votes: ${votes} / 7`;
-        });
-    }
+    const toggleModal = (modal, shouldShow) => {
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.toggle('is-hidden', !shouldShow);
+        modal.style.display = shouldShow ? 'flex' : 'none';
+    };
+
+    const showRoleError = (message) => {
+        if (!manageRolesFormError) {
+            return;
+        }
+
+        manageRolesFormError.textContent = message;
+        manageRolesFormError.classList.remove('is-hidden');
+    };
+
+    const closeManageRolesModal = () => {
+        toggleModal(manageRolesModal, false);
+        manageRolesForm?.reset();
+        if (manageRolesFormError) {
+            manageRolesFormError.textContent = '';
+            manageRolesFormError.classList.add('is-hidden');
+        }
+    };
     
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
@@ -38,30 +61,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle join group button clicks
-    joinGroupBtns.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            const groupId = e.target.getAttribute('data-id');
-
-            try {
-                const response = await fetch(`/groups/${groupId}/join`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || errorData.message || 'Failed to join group');
-                }
-
-                alert('Successfully joined group!');
-                window.location.reload();
-            } catch (err) {
-                alert(`Error joining group: ${err.message}`);
-            }
-        });
+    manageRolesBtn?.addEventListener('click', (event) => {
+        event.preventDefault();
+        toggleModal(manageRolesModal, true);
     });
 
+    closeManageRolesModalBtn?.addEventListener('click', closeManageRolesModal);
+
+    window.addEventListener('click', (event) => {
+        if (event.target === manageRolesModal) {
+            closeManageRolesModal();
+        }
+    });
+
+    manageRolesForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const userId = roleUserSelect?.value || '';
+        const roleID = Number(roleValueSelect?.value || 0);
+
+        if (!userId || ![1, 2].includes(roleID)) {
+            showRoleError('Please select a valid user and role.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/auth/users/${userId}/role`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ roleID })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || errorData.message || 'Failed to update user role');
+            }
+
+            closeManageRolesModal();
+            window.location.reload();
+        } catch (err) {
+            showRoleError(err.message);
+        }
+    });
 });

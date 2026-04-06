@@ -1,44 +1,13 @@
 const router = require('express').Router();
 const userController = require('../controllers/users');
 const passport = require('passport');
-const bcrypt = require('bcrypt');
-const { getDb } = require('../DB/connect');
-
-// ===== TESTING ENDPOINT - Remove in production =====
-// GET /auth/create-test-user - Creates a test user for easy testing
-router.get('/create-test-user', async (req, res) => {
-    try {
-        const testUser = {
-            username: 'testuser',
-            email: 'test@test.com',
-            password: await bcrypt.hash('Password123!', 10),
-            roleID: 1,
-            createdAt: new Date()
-        };
-        
-        // Check if test user already exists
-        const existing = await getDb().collection('users').findOne({ email: testUser.email });
-        if (existing) {
-            return res.json({ 
-                message: 'Test user already exists', 
-                credentials: { email: 'test@test.com', password: 'Password123!' }
-            });
-        }
-        
-        await getDb().collection('users').insertOne(testUser);
-        res.json({ 
-            message: 'Test user created successfully!',
-            credentials: { email: 'test@test.com', password: 'Password123!' }
-        });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-// ===== END TESTING ENDPOINT =====
+const { isAdmin } = require('../middleware/auth');
 
 // Register new user
 router.post('/register', 
     /* 
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Register a new user account'
     #swagger.parameters['body'] = {
         in: 'body',
         description: 'User registration',
@@ -56,6 +25,8 @@ router.post('/register',
 // Login user - Passport authenticates before calling controller
 router.post('/login', 
     /* 
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Authenticate user with email and password'
     #swagger.parameters['body'] = {
         in: 'body',
         description: 'User login credentials',
@@ -74,10 +45,47 @@ router.post('/login',
 );
 
 // Logout user
-router.post('/logout', userController.logout);
+router.post('/logout',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Log out the currently authenticated user'
+    */
+    userController.logout);
 
 // Get current logged-in user info
-router.get('/me', userController.getCurrentUser);
+router.get('/me',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Get the currently authenticated user profile'
+    */
+    userController.getCurrentUser);
+
+// Update a user's role (admin only)
+router.patch('/users/:id/role',
+    /*
+    #swagger.tags = ['Authentication']
+    #swagger.description = 'Update a user role (admin only)'
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'User id',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'New role payload',
+        required: true,
+        schema: {
+            roleID: 2
+        }
+    }
+    #swagger.responses[200] = { description: 'User role updated successfully' }
+    #swagger.responses[400] = { description: 'Invalid user id or invalid role value' }
+    #swagger.responses[403] = { description: 'Admin only' }
+    #swagger.responses[404] = { description: 'User not found' }
+    */
+    isAdmin,
+    userController.updateUserRole);
 
 // Google OAuth - initiate login
 router.get('/google',

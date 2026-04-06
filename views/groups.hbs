@@ -1,0 +1,150 @@
+{{#if error}}
+    <p class="error">{{error}}</p>
+{{/if}}
+
+
+
+{{#if canViewGroups}}
+    {{#if isAdmin}}
+    <div class="group-actions">
+        <button class="btn" id="createGroupBtn" type="button">Create a Group</button>
+        <button class="btn" id="deleteGroupBtn" type="button" {{#unless groups}}disabled{{/unless}}>Delete a Group</button>
+    </div>
+    {{/if}}
+
+    {{> groupModals}}
+
+    {{#if groups}}
+    <div class="groups">
+        <h2>Groups</h2>
+        <p>See the available groups and their current vote totals.</p>
+        {{#each groups}}
+            {{#if this}}
+            <div class="group-card">
+                <h3>{{#if this.groupName}}{{this.groupName}}{{else}}Unnamed Group{{/if}}</h3>
+                <p>Votes: {{this.totalVotes}} / {{this.memberCount}}</p>
+                <p><strong>Members:</strong>
+                    {{#each this.memberDetails}}
+                        {{#unless @first}}, {{/unless}}{{username}} ({{roleLabel}})
+                    {{else}}
+                        None
+                    {{/each}}
+                </p>
+                {{#unless this.isMember}}
+                <button class="btn join-group-btn" type="button" data-id="{{this._id}}">Join Group</button>
+                {{/unless}}
+                {{#if @root.isAdmin}}
+                <button class="btn add-activity-btn" type="button" data-group-id="{{this._id}}" data-group-name="{{this.groupName}}">Add Activity</button>
+                {{/if}}
+                {{#if this.activities.length}}
+                    <div class="group-activities">
+                        <p><strong>Activities:</strong></p>
+                        <ul class="group-activities-list">
+                            {{#each this.activities}}
+                                <li class="group-activity-item">
+                                    <span>{{#if title}}{{title}} ({{activityType}}){{else}}{{this}}{{/if}} - Votes: {{voteCount}}</span>
+                                    <div class="group-activity-actions">
+                                        {{#if ../this.isMember}}
+                                        {{#unless ../this.isFinished}}
+                                        <button
+                                            class="btn vote-activity-btn"
+                                            type="button"
+                                            data-group-id="{{../this._id}}"
+                                            data-activity-id="{{activityIdString}}"
+                                            data-activity-type="{{activityType}}"
+                                            {{#if votedByCurrentUser}}disabled{{/if}}
+                                        >
+                                            +1 Vote
+                                        </button>
+                                        {{/unless}}
+                                        {{/if}}
+                                        {{#if @root.isAdmin}}
+                                            <button
+                                                class="btn remove-activity-btn"
+                                                type="button"
+                                                data-group-id="{{../this._id}}"
+                                                data-activity-id="{{activityIdString}}"
+                                                data-activity-type="{{activityType}}"
+                                            >
+                                                Remove
+                                            </button>
+                                        {{/if}}
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ul>
+
+                        {{#if this.isFinished}}
+                            <p><strong>Voting finished.</strong>
+                                {{#if this.winningActivity}}
+                                    Winner: {{this.winningActivity.title}} ({{this.winningActivity.activityType}}) with {{this.winningActivity.voteCount}} votes.
+                                {{/if}}
+                            </p>
+                        {{else}}
+                            {{#if @root.isAdmin}}
+                                <button class="btn finish-group-btn" type="button" data-group-id="{{this._id}}">Finish Voting</button>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{else}}
+                    <p>No activities added yet.</p>
+                {{/if}}
+                {{!-- <button class="btn">Leave Group</button> --}}
+            </div>
+            {{/if}}
+        {{/each}}
+    </div>
+    {{else}}
+    <p>No groups available yet. Create the first one to get started.</p>
+    {{/if}}
+{{/if}}
+
+{{#if movies}}
+ <h2>Movies</h2>
+        <p>Browse movie options that can be picked for a group.</p>
+    <div class="movies-grid">
+       
+        {{#each movies}}
+            <div class="movie-card">
+                <img src="/images/movies/{{imageURL}}" alt="{{title}}" class="movie-image">
+                <h2>{{title}}</h2>
+                <p><strong>Genre:</strong> {{genre}}</p>
+                <p><strong>Rating:</strong> {{rating}}</p>
+                <p><strong>Runtime:</strong> {{runtime}}</p>
+                <p>{{description}}</p>
+                <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button>
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <p>No movies available yet. Check back soon!</p>
+{{/if}}
+
+{{#if games}}
+    <div class="games">
+        <h2>Games</h2>
+        <p>Browse game options that can be picked for a group.</p>
+        {{#each games}}
+            <div class="game-card">
+                <img src="/images/games/{{imageURL}}" alt="{{title}}" class="game-image">
+                <div class="game-info">
+                <h2>{{title}}</h2>
+                <p><strong>Genre:</strong> {{genre}}</p>
+                <p><strong>Min Players:</strong> {{minPlayers}}</p>
+                <p><strong>Max Players:</strong> {{maxPlayers}}</p>
+                <p><strong>Playtime:</strong> {{play_time}}</p>
+                <p>{{description}}</p>
+                <button class="pick-btn" data-id="{{_id}}">Pick This Game</button>
+            </div>
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <p>No games available yet. Check back soon!</p>
+{{/if}}
+
+<script src="/js/activities/activities-modals.js"></script>
+<script src="/js/activities/activities-group.js"></script>
+<script src="/js/activities/activities.js"></script>
+
+{{!-- ?v=20260403 --}}

@@ -2,98 +2,56 @@
     <p class="error">{{error}}</p>
 {{/if}}
 
-<h1>Dashboard - Profile</h1>
+<h1>Dashboard</h1>
 
-{{!-- + 1 Button to vote test to a variable to change for let --}}
-<p id="votes-display">Votes: 0 / 7</p>
-<button id="add-btn" class="btn">Add 1</button>
-
-<section class="my-groups">
-    <h2>My Groups</h2>
-    <p>These are the groups you have already joined.</p>
-    {{#if myGroups.length}}
-        <ul class="my-groups-list">
-            {{#each myGroups}}
-                <li class="my-group-item">{{groupName}}</li>
-            {{/each}}
-        </ul>
+<section class="profile-summary">
+    <h2>Your Profile</h2>
+    <p><strong>Username:</strong> {{userProfile.username}}</p>
+    <p><strong>Email:</strong> {{userProfile.email}}</p>
+    {{#if isAdmin}}
+        <p><strong>Role:</strong> Admin</p>
     {{else}}
-        <p>You have not joined any groups yet.</p>
+        <p><strong>Role:</strong> Member</p>
     {{/if}}
 </section>
 
-{{#if movies}}
-    <div class="movies-grid">
-        <h2>Movies</h2>
-        <p>Browse movie options that can be picked for a group.</p>
-        {{#each movies}}
-            <div class="movie-card">
-                {{#if imageURL}}
-                    <img src="{{imageURL}}" alt="{{title}}" class="movie-image">
-                {{/if}}
-                <h2>{{title}}</h2>
-                <p><strong>Genre:</strong> {{genre}}</p>
-                <p><strong>Rating:</strong> {{rating}}</p>
-                <p><strong>Runtime:</strong> {{runtime}} minutes</p>
-                <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button>
+{{#if isAdmin}}
+<section class="profile-summary admin-tools">
+    <h2>Admin Tools</h2>
+    <button id="manageRolesBtn" class="btn" type="button">Manage User Roles</button>
+</section>
+
+<div id="manageRolesModal" class="modal-overlay is-hidden">
+    <div class="modal-window">
+        <span class="modal-close" id="closeManageRolesModal">×</span>
+        <h2>Manage User Roles</h2>
+        <form id="manageRolesForm">
+            <div class="form-group">
+                <label for="roleUserSelect">User:</label>
+                <select id="roleUserSelect" name="userId" class="browser-default modal-select" required>
+                    {{#each allUsers}}
+                        <option value="{{_id}}">{{username}} ({{email}}) - {{roleLabel}}</option>
+                    {{else}}
+                        <option value="">No users available</option>
+                    {{/each}}
+                </select>
             </div>
-        {{/each}}
+
+            <div class="form-group">
+                <label for="roleValueSelect">Role:</label>
+                <select id="roleValueSelect" name="roleID" class="browser-default modal-select" required>
+                    <option value="1">Member</option>
+                    <option value="2">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">Save Role</button>
+        </form>
+        <p id="manageRolesFormError" class="form-error is-hidden"></p>
     </div>
-{{else}}
-    <p>No movies available yet. Check back soon!</p>
+</div>
 {{/if}}
 
-
-{{#if games}}
-    <div class="games">
-        <h2>Games</h2>
-        <p>Browse game options that can be picked for a group.</p>
-        {{#each games}}
-            <div class="game-card">
-                {{#if imageURL}}
-                    <img src="{{imageURL}}" alt="{{title}}" class="game-image">
-                {{/if}}
-                <h2>{{title}}</h2>
-                <p><strong>Genre:</strong> {{genre}}</p>
-                <p><strong>Min Players:</strong> {{minPlayers}}</p>
-                <p><strong>Max Players:</strong> {{maxPlayers}}</p>
-                <p><strong>Playtime:</strong> {{playtime}} minutes</p>
-                <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Game</button>
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No games available yet. Check back soon!</p>
-{{/if}}
-
-{{#if groups}}
-    <div class="groups">
-        <h2>Groups</h2>
-        <p>Browse all available groups, see who is in them, and join one when you are ready.</p>
-        {{#each groups}}
-            <div class="group-card">
-                {{#if groupName}}
-                    <h3>{{groupName}}</h3>
-                    <p>Winning Vote: {{votes}} / {{winVote}}</p>
-                    <p><strong>Members:</strong>
-                        {{#each memberDetails}}
-                            {{#unless @first}}, {{/unless}}{{username}}{{#if isAdmin}} (Admin){{/if}}
-                        {{else}}
-                            None
-                        {{/each}}
-                    </p>
-                    <button class="btn">Add Activity</button>
-                    <button class="btn join-group-btn" data-id="{{_id}}">Join Group</button>
-                {{/if}}
-            </div>
-        {{/each}}
-    </div>
-{{else}}
-    <p>No groups available yet. Check back soon!</p>
-{{/if}}
-
-<button id="logout-btn">Logout</button>
+<button id="logout-btn" class="btn">Log Out</button>
 
 <script src="/js/dashboard.js"></script>

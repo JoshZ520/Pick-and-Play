@@ -1,10 +1,18 @@
 <nav class="navbar">
     <ul class="nav">
         <li><a href="/">Home</a></li>
-        {{!-- <li><a href="/register">Register</a></li> --}}
-        <li><a href="/activities">Groups</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/api-docs/#/">Api-Docs (Temp)</a></li>
+        <li><a href="/groups">Groups</a></li>
+        {{#if isLoggedIn}}
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li>
+                <form action="/auth/logout" method="POST" class="nav-logout-form">
+                    <button type="submit" class="nav-logout-btn">Logout</button>
+                </form>
+            </li>
+        {{else}}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        {{/if}}
+        <li><a href="/api-docs/#/">API Docs</a></li>
     </ul>
 </nav>
