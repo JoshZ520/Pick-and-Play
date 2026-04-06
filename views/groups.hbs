@@ -2,18 +2,20 @@
     <p class="error">{{error}}</p>
 {{/if}}
 
+
+
+{{#if canViewGroups}}
 <h1>Groups</h1>
+    {{#if isAdmin}}
+    <div class="group-actions">
+        <button class="btn" id="createGroupBtn" type="button">Create a Group</button>
+        <button class="btn" id="deleteGroupBtn" type="button" {{#unless groups}}disabled{{/unless}}>Delete a Group</button>
+    </div>
+    {{/if}}
 
-{{#if isAdmin}}
-<div class="group-actions">
-    <button class="btn" id="createGroupBtn" type="button">Create a Group</button>
-    <button class="btn" id="deleteGroupBtn" type="button" {{#unless groups}}disabled{{/unless}}>Delete a Group</button>
-</div>
-{{/if}}
+    {{> groupModals}}
 
-{{> groupModals}}
-
-{{#if groups}}
+    {{#if groups}}
     <div class="groups">
         <h2>Groups</h2>
         <p>See the available groups and their current vote totals.</p>
@@ -83,8 +85,9 @@
             {{/if}}
         {{/each}}
     </div>
-{{else}}
+    {{else}}
     <p>No groups available yet. Create the first one to get started.</p>
+    {{/if}}
 {{/if}}
 
 {{#if movies}}
