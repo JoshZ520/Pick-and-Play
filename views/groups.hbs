@@ -100,9 +100,10 @@
 {{/if}}
 
 {{#if movies}}
-    <div class="movies-grid">
-        <h2>Movies</h2>
+ <h2>Movies</h2>
         <p>Browse movie options that can be picked for a group.</p>
+    <div class="movies-grid">
+       
         {{#each movies}}
             <div class="movie-card">
                 <img src="/images/movies/{{imageURL}}" alt="{{title}}" class="movie-image">
@@ -126,6 +127,7 @@
         {{#each games}}
             <div class="game-card">
                 <img src="/images/games/{{imageURL}}" alt="{{title}}" class="game-image">
+                <div class="game-info">
                 <h2>{{title}}</h2>
                 <p><strong>Genre:</strong> {{genre}}</p>
                 <p><strong>Min Players:</strong> {{minPlayers}}</p>
@@ -133,6 +135,7 @@
                 <p><strong>Playtime:</strong> {{play_time}}</p>
                 <p>{{description}}</p>
                 <button class="pick-btn" data-id="{{_id}}">Pick This Game</button>
+            </div>
             </div>
         {{/each}}
     </div>
