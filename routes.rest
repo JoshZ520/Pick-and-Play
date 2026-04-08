@@ -1,6 +1,6 @@
 ### -------------------- VARIABLES --------------------
 @baseLocal = http://localhost:3000
-@baseRender = https://pick-and-play-mic3.onrender.com
+@baseRender = https://pick-and-play-1.onrender.com
 
 @adminEmail = admin_teddy@test.com
 @adminPassword = adminTeddy123!
