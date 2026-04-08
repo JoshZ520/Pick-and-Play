@@ -376,3 +376,30 @@ ul.password-requirements {
     text-align: center;
     margin-top: 1rem;
 }
+
+@media only screen and (max-width: 1080px) {
+    .games {
+    display: flex;
+    flex-direction: column;
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px; */
+}
+
+    .games-grid {
+    
+    display: flex;
+    flex-direction: column;
+     
+}
+}
+
+@media only screen and (max-width: 720px) {
+    .act-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .groups-grid {
+        display: flex;
+        flex-direction: column;
+    }
+}
