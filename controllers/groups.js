@@ -375,7 +375,7 @@ const finishGroupVoting = async (req, res) => {
             ? {
                 activityId: winningActivity.activityId,
                 activityType: winningActivity.activityType,
-                title: winningActivity.title,
+                title: winningActivity.title || 'Untitled activity',
                 voteCount: Number(winningActivity.voteCount) || 0
             }
             : null;
@@ -519,6 +519,19 @@ const removeMemberFromGroup = async (req, res) => {
         return res.status(500).json({ message: err.message });
     }
 };
+
+// Previous exports kept for comparison
+// module.exports = {
+//     allGroups,
+//     singleGroup,
+//     createGroup,
+//     deleteGroup,
+//     joinGroup,
+//     addActivityToGroup,
+//     removeActivityFromGroup,
+//     voteOnActivity,
+//     finishGroupVoting
+// };
 
 module.exports = {
     allGroups,
