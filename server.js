@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 // Dynamic Swagger host based on environment
 if (process.env.NODE_ENV === 'production') {
-    swaggerDocument.host = 'pick-and-play-mic3.onrender.com';
+    swaggerDocument.host = 'pick-and-play-1.onrender.com';
     swaggerDocument.schemes = ['https'];
 } else {
     swaggerDocument.host = `localhost:${PORT}`;
@@ -67,7 +67,7 @@ app
         next();
     })
     .use(cors({
-        origin: "https://pick-and-play-mic3.onrender.com",
+        origin: "https://pick-and-play-1.onrender.com",
         headers: ["Content-Type"],
         credentials: true,
     }))
