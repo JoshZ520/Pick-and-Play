@@ -520,19 +520,6 @@ const removeMemberFromGroup = async (req, res) => {
     }
 };
 
-// Previous exports kept for comparison
-// module.exports = {
-//     allGroups,
-//     singleGroup,
-//     createGroup,
-//     deleteGroup,
-//     joinGroup,
-//     addActivityToGroup,
-//     removeActivityFromGroup,
-//     voteOnActivity,
-//     finishGroupVoting
-// };
-
 module.exports = {
     allGroups,
     singleGroup,
