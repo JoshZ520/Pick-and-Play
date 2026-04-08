@@ -5,7 +5,7 @@
         {{#if isLoggedIn}}
             <li><a href="/dashboard">Dashboard</a></li>
             <li>
-                <form action="/auth/logout" method="POST" class="nav-logout-form">
+                <form action="/auth/logout" method="POST" class="nav-logout-form" id="nav-logout-form">
                     <button type="submit" class="nav-logout-btn">Logout</button>
                 </form>
             </li>
@@ -16,3 +16,20 @@
         <li><a href="/api-docs/#/">API Docs</a></li>
     </ul>
 </nav>
+
+<script>
+    const logoutForm = document.getElementById('nav-logout-form');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch('/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/';
+                }
+            }).catch(err => console.error('Logout error:', err));
+        });
+    }
+</script>
