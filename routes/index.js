@@ -135,7 +135,12 @@ const renderGroupsPage = async (req, res) => {
                 groupName: g.groupName.trim(),
                 memberCount: Array.isArray(g.members) ? g.members.length : 0,
                 isFinished: Boolean(g.isFinished),
-                winningActivity: g.winningActivity || null,
+                winningActivity: g.winningActivity
+                    ? {
+                        ...g.winningActivity,
+                        title: g.winningActivity.title || 'Untitled activity'
+                    }
+                    : null,
                 isMember: Boolean(
                     currentUserId
                     && Array.isArray(g.members)
@@ -153,6 +158,7 @@ const renderGroupsPage = async (req, res) => {
                 activities: Array.isArray(g.activities)
                     ? g.activities.map((activity) => ({
                         ...activity,
+                        title: activity.title || 'Untitled activity',
                         activityIdString: activity.activityId?.toString?.() || '',
                         voteCount: Number(activity.voteCount) || 0,
                         votedByCurrentUser: Boolean(

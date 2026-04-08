@@ -128,6 +128,14 @@ router.post('/:id/finish',
 	*/
 	isAdmin, groupController.finishGroupVoting);
 
+// Previous delete route kept for comparison
+// router.delete('/:id',
+// 	/*
+// 	#swagger.tags = ['Groups']
+// 	#swagger.description = 'Delete a group by id'
+// 	*/
+// 	groupController.deleteGroup);
+
 // Update group metadata (currently groupName only)
 router.patch('/:id',
 	/*
