@@ -1,12 +1,37 @@
+### -------------------- VARIABLES --------------------
+@baseLocal = http://localhost:3000
+@baseRender = https://pick-and-play-mic3.onrender.com
+
+@adminEmail = admin_teddy@test.com
+@adminPassword = adminTeddy123!
+@memberEmail = member@test.com
+@memberPassword = Password123!
+
+@movieIdLocal = 69cffbe525a04936e35030ce
+@gameIdLocal = 69d0010f25a04936e35030dd
+@groupIdLocal = 69d41dfd45cb8f2b34a982ea
+@groupDeleteIdLocal = 69d4008721773c4724a11293
+@gameUpdateIdLocal = 69d0010f25a04936e35030de
+@movieDeleteIdLocal = 69d421fe45cb8f2b34a982ec
+@gameDeleteIdLocal = 69d0010f25a04936e35030de
+@selfUserIdLocal = 69d0010f25a04936e35030de
+@memberIdLocal = 69d0010f25a04936e35030df
+
+@movieIdRender = 69cffbe525a04936e35030d1
+@gameIdRender = 69d0010f25a04936e35030da
+@groupIdRender = 69cef917e06ab30dbfe77bd5
+@groupDeleteIdRender = 69d41dfd45cb8f2b34a982ea
+@gameUpdateIdRender = 69d0010f25a04936e35030de
+@movieUpdateIdRender = 69d42586885fa045a9d13b9e
+@gameDeleteIdRender = 69d425bd885fa045a9d13b9f
+@selfUserIdRender = 69d0010f25a04936e35030de
+@memberIdRender = 69d0010f25a04936e35030df
+
 ### AUTH ENDPOINTS ###
 
-### Create Test User
-GET http://localhost:3000/auth/create-test-user
-
 ### Register New User
-POST http://localhost:3000/auth/register
+POST {{baseLocal}}/auth/register
 Content-Type: application/json
-
 {
     "username": "newuser",
     "email": "newuser@test.com",
@@ -14,61 +39,43 @@ Content-Type: application/json
 }
 
 ### Login (redirects to dashboard on success)
-POST http://localhost:3000/auth/login
+# POST http://localhost:3000/auth/login
+POST {{baseLocal}}/auth/login
 Content-Type: application/json
-
 {
-    "email": "admin_teddy@test.com",
-    "password": "adminTeddy123!"
+    "email": "{{adminEmail}}",
+    "password": "{{adminPassword}}"
 }
 
 ### Logout
-POST http://localhost:3000/auth/logout
+POST {{baseLocal}}/auth/logout
 Content-Type: application/json
 
 ### Get Current User
-GET http://localhost:3000/auth/me
-
+GET {{baseLocal}}/auth/me
 ### RESOURCE ENDPOINTS ###
 
-### 
-GET http://localhost:3000/movies
+GET {{baseLocal}}/movies
+
+GET {{baseLocal}}/games
 
 ###
-GET http://localhost:3000/games
-
-## Previous route kept for comparison
-# ###
-# GET http://localhost:3000/groups/
+GET {{baseLocal}}/api/groups
 
 ###
-GET http://localhost:3000/api/groups
+GET {{baseLocal}}/movies/{{movieIdLocal}}
 
 ###
-GET http://localhost:3000/movies/69cffbe525a04936e35030ce
-
-# ###
-# GET http://localhost:3000/users
-
-###
-GET http://localhost:3000/games/69d0010f25a04936e35030dd
+GET {{baseLocal}}/games/{{gameIdLocal}}
 
 ## Previous route kept for comparison
 # ###
 # GET http://localhost:3000/groups/69d3d54d57e0bf4ab8a099c0
 
 ###
-GET http://localhost:3000/api/groups/69d3d54d57e0bf4ab8a099c0
+GET {{baseLocal}}/api/groups/{{groupIdLocal}}
 
-###
-# POST http://localhost:3000/localhost:3000/users HTTP/1.1
-# content-type: application/json
-
-# {
-
-# }
-
-POST http://localhost:3000/games HTTP/1.1
+POST {{baseLocal}}/games HTTP/1.1
 content-type: application/json
 
 {
@@ -97,7 +104,7 @@ content-type: application/json
 # }
 
 ###
-POST http://localhost:3000/api/groups HTTP/1.1
+POST {{baseLocal}}/api/groups HTTP/1.1
 content-type: application/json
 
 {
@@ -106,7 +113,7 @@ content-type: application/json
 }
 
 ###
-POST http://localhost:3000/movies HTTP/1.1
+POST {{baseLocal}}/movies HTTP/1.1
 content-type: application/json
 
 {
@@ -118,9 +125,8 @@ content-type: application/json
     "imageURL": "eruhnj23" 
 }
 
-//need to check
 ###
-PUT http://localhost:3000/movies/69cffbe525a04936e35030ce
+PUT {{baseLocal}}/movies/{{movieIdLocal}}
 
 {
     "title": "Hotel Transylvania [2012]",
@@ -131,15 +137,8 @@ PUT http://localhost:3000/movies/69cffbe525a04936e35030ce
     "imageURL": "hotel.jpg" 
 }
 
-# PUT http://localhost:3000/localhost:3000/users/
-
-# {
-
-# }
-
-//Need to check
 ###
-PUT http://localhost:3000/games/69d0010f25a04936e35030de
+PUT {{baseLocal}}/games/{{gameUpdateIdLocal}}
 
 {
     "title": "Jenga",
@@ -166,7 +165,7 @@ PUT http://localhost:3000/games/69d0010f25a04936e35030de
 # }
 
 ###
-PATCH http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea
+PATCH {{baseLocal}}/api/groups/{{groupIdLocal}}
 content-type: application/json
 
 {
@@ -174,67 +173,51 @@ content-type: application/json
 }
 
 ### Leave group (self-remove)
-DELETE http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030de
+DELETE {{baseLocal}}/api/groups/{{groupIdLocal}}/members/{{selfUserIdLocal}}
 
 ### Admin remove member from group
-DELETE http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030df
+DELETE {{baseLocal}}/api/groups/{{groupIdLocal}}/members/{{memberIdLocal}}
 
-//Add Id
 ###
-DELETE http://localhost:3000/movies/69d421fe45cb8f2b34a982ec
-
-//This needs checking
-# ###
-# DELETE http://localhost:3000/localhost:3000/users/
+DELETE {{baseLocal}}/movies/{{movieDeleteIdLocal}}
 
 ## Previous route kept for comparison
 # ###
 # DELETE http://localhost:3000/groups/69d4008721773c4724a11293
 
 ###
-DELETE http://localhost:3000/api/groups/69d4008721773c4724a11293
+DELETE {{baseLocal}}/api/groups/{{groupDeleteIdLocal}}
 
-//Add Id
 ###
-DELETE http://localhost:3000/games/
-
-
+DELETE {{baseLocal}}/games/{{gameDeleteIdLocal}}
 
 ### -------------- RENDER LINKS REST API ---------------------------
 
-POST https://pick-and-play-mic3.onrender.com/auth/login
+POST {{baseRender}}/auth/login
 Content-Type: application/json
 
 {
-    "email": "admin_teddy@test.com",
-    "password": "adminTeddy123!"
+    "email": "{{adminEmail}}",
+    "password": "{{adminPassword}}"
 }
 
 ###
-GET https://pick-and-play-mic3.onrender.com/movies
-
-
-###
-GET https://pick-and-play-mic3.onrender.com/3000/auth/create-test-user
-
+GET {{baseRender}}/movies
 
 ## Previous route kept for comparison
 # ###
 # GET https://pick-and-play-mic3.onrender.com/groups 
 
 ###
-GET https://pick-and-play-mic3.onrender.com/api/groups
+GET {{baseRender}}/api/groups
 
 
 ###
-GET https://pick-and-play-mic3.onrender.com/games 
+GET {{baseRender}}/games 
 
 
 ###
-GET https://pick-and-play-mic3.onrender.com/movies/69cffbe525a04936e35030d1
-
-###
-GET https://pick-and-play-mic3.onrender.com/3000/users/
+GET {{baseRender}}/movies/{{movieIdRender}}
 
 
 // Previous route kept for comparison
@@ -242,14 +225,14 @@ GET https://pick-and-play-mic3.onrender.com/3000/users/
 # GET https://pick-and-play-mic3.onrender.com/groups/69cef917e06ab30dbfe77bd5
 
 ###
-GET https://pick-and-play-mic3.onrender.com/api/groups/69cef917e06ab30dbfe77bd5
+GET {{baseRender}}/api/groups/{{groupIdRender}}
 
 ###
-GET https://pick-and-play-mic3.onrender.com/games/69d0010f25a04936e35030da
+GET {{baseRender}}/games/{{gameIdRender}}
 
 
 ###
-POST https://pick-and-play-mic3.onrender.com/movies HTTP/1.1
+POST {{baseRender}}/movies HTTP/1.1
 content-type: application/json
 
 {
@@ -261,16 +244,8 @@ content-type: application/json
     "imageURL": "eruhnj23" 
 }
 
-# ###
-# POST https://pick-and-play-mic3.onrender.com/3000/users HTTP/1.1
-# content-type: application/json
-
-# {
-
-# }
-
 ###
-POST https://pick-and-play-mic3.onrender.com/games HTTP/1.1
+POST {{baseRender}}/games HTTP/1.1
 content-type: application/json
 
 {
@@ -284,21 +259,16 @@ content-type: application/json
 }
 
 ###
-POST https://pick-and-play-mic3.onrender.com/api/groups HTTP/1.1
+POST {{baseRender}}/api/groups HTTP/1.1
 content-type: application/json
 
 {
     "groupName": "Wonder Woman Team",
-    "winVote": 8,
-    "winVote": 0,
-    "createdBy": null,
-    "groupAdminId": null,
-    "members": [],
     "activities": []
 }
 
 ###
-PUT https://pick-and-play-mic3.onrender.com/movies/69d42586885fa045a9d13b9e HTTP/1.1
+PUT {{baseRender}}/movies/{{movieUpdateIdRender}} HTTP/1.1
 content-type: application/json
 
 {
@@ -310,17 +280,8 @@ content-type: application/json
     "imageURL": "eruhnj23" 
 }
 
-
-# ###
-# PUT https://pick-and-play-mic3.onrender.com/users/ HTTP/1.1
-# content-type: application/json
-
-# {
-
-# }
-
 ###
-PUT https://pick-and-play-mic3.onrender.com/games/69d0010f25a04936e35030de HTTP/1.1
+PUT {{baseRender}}/games/{{gameUpdateIdRender}} HTTP/1.1
 content-type: application/json
 
 {
@@ -349,7 +310,7 @@ content-type: application/json
 # }
 
 ###
-PATCH https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea HTTP/1.1
+PATCH {{baseRender}}/api/groups/{{groupDeleteIdRender}} HTTP/1.1
 content-type: application/json
 
 {
@@ -357,22 +318,16 @@ content-type: application/json
 }
 
 ### Render leave group (self-remove)
-DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030de
+DELETE {{baseRender}}/api/groups/{{groupDeleteIdRender}}/members/{{selfUserIdRender}}
 
 ### Render admin remove member from group
-DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030df
-
-
+DELETE {{baseRender}}/api/groups/{{groupDeleteIdRender}}/members/{{memberIdRender}}
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/movies/69d42586885fa045a9d13b9e
-
-
-# ###
-# DELETE https://pick-and-play-mic3.onrender.com/users/
+DELETE {{baseRender}}/movies/{{movieUpdateIdRender}}
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea
+DELETE {{baseRender}}/api/groups/{{groupDeleteIdRender}}
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/games/69d425bd885fa045a9d13b9f
+DELETE {{baseRender}}/games/{{gameDeleteIdRender}}
