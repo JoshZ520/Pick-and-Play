@@ -15,7 +15,7 @@
     gap: 20px;
     padding: 20px;
 }
-.group-header {
+/* .group-header {
     display: grid;
     grid-template-columns: auto auto;
 }
@@ -26,19 +26,19 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-}
+} */
 
 .group-card {
     display: flex;
     flex-direction: column;
     /* flex: 1 1 300px; */
-    min-height: 100%;
-    width: 100%;
+    /* min-height: 100%;
+    width: 100%; */
     /* height: auto; */
     
 }
 .left  button.add-activity-btn, button.join-group-btn, button.vote-activity-btn {
-    margin-top: auto;
+    /* margin-top: auto; */
     /* justify-content: flex-end; */
     /* position: absolute;
     right: 0;
@@ -47,10 +47,10 @@
     bottom: 0; */
     
 }
-.left {
+/* .left {
     display: flex;
     flex-direction: column;
-}
+} */
 
 .act-container {
     display: grid;
@@ -162,7 +162,7 @@
     border-radius: 8px;
     padding: 16px;
     margin: 16px 0;
-    background-color: #ee6e7237;
+    background-color: #f9f9f9;
 }
 
 .group-actions {
@@ -323,7 +323,7 @@
 }
 
 .dashboard-container {
-    background-color: #ee6e7237;
+    /* background-color: #ee6e7237; */
     border-radius: .5rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.349);
     padding: 1rem 2rem;
