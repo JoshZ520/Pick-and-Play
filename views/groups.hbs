@@ -18,12 +18,20 @@
     <div class="groups">
         <h2>Groups</h2>
         <p>See the available groups and their current vote totals.</p>
+        <div class="groups-grid">
         {{#each groups}}
             {{#if this}}
             <div class="group-card">
-                <h3>{{#if this.groupName}}{{this.groupName}}{{else}}Unnamed Group{{/if}}</h3>
-                <p>Votes: {{this.totalVotes}} / {{this.memberCount}}</p>
-                <p><strong>Members:</strong>
+                <div class="group-header">
+                    <div>
+                    <h3>{{#if this.groupName}}{{this.groupName}}{{else}}Unnamed Group{{/if}}</h3>
+                    </div>
+                    <div>
+                    <p>Votes: {{this.totalVotes}} / {{this.memberCount}}</p>
+                    </div>
+                </div>
+                <div class="group-content">
+                <div class="left"><p><strong>Members:</strong>
                     {{#each this.memberDetails}}
                         {{#unless @first}}, {{/unless}}{{username}} ({{roleLabel}})
                     {{else}}
@@ -35,6 +43,8 @@
                 {{/unless}}
                 {{#if @root.isAdmin}}
                 <button class="btn add-activity-btn" type="button" data-group-id="{{this._id}}" data-group-name="{{this.groupName}}">Add Activity</button>
+                </div>
+                
                 {{/if}}
                 {{#if this.activities.length}}
                     <div class="group-activities">
@@ -66,7 +76,8 @@
                                                 data-activity-id="{{activityIdString}}"
                                                 data-activity-type="{{activityType}}"
                                             >
-                                                Remove
+                                            Remove
+                                                {{!-- <i class="fa-solid fa-xmark"></i> --}}
                                             </button>
                                         {{/if}}
                                     </div>
@@ -91,8 +102,10 @@
                 {{/if}}
                 {{!-- <button class="btn">Leave Group</button> --}}
             </div>
+            </div>
             {{/if}}
         {{/each}}
+    </div>
     </div>
     {{else}}
     <p>No groups available yet. Create the first one to get started.</p>
@@ -100,7 +113,9 @@
 {{/if}}
 
 {{#if movies}}
- <h2>Movies</h2>
+<div class="act-container">
+    <div class="movie-container">
+        <h2>Movies</h2>
         <p>Browse movie options that can be picked for a group.</p>
     <div class="movies-grid">
        
@@ -111,7 +126,7 @@
                 <p><strong>Genre:</strong> {{genre}}</p>
                 <p><strong>Rating:</strong> {{rating}}</p>
                 <p><strong>Runtime:</strong> {{runtime}}</p>
-                <p>{{description}}</p>
+                <p class="fourth">{{description}}</p>
                 <button class="pick-btn" data-id="{{_id}}">Pick This Movie</button>
             </div>
         {{/each}}
@@ -119,12 +134,16 @@
 {{else}}
     <p>No movies available yet. Check back soon!</p>
 {{/if}}
-
+</div>
+<div>
 {{#if games}}
-    <div class="games">
-        <h2>Games</h2>
+    
+        
+        <div class="games">
+            <h2>Games</h2>
         <p>Browse game options that can be picked for a group.</p>
         {{#each games}}
+            <div class="games-grid">
             <div class="game-card">
                 <img src="/images/games/{{imageURL}}" alt="{{title}}" class="game-image">
                 <div class="game-info">
@@ -134,7 +153,8 @@
                 <p><strong>Max Players:</strong> {{maxPlayers}}</p>
                 <p><strong>Playtime:</strong> {{play_time}}</p>
                 <p>{{description}}</p>
-                <button class="pick-btn" data-id="{{_id}}">Pick This Game</button>
+                <button class="pick-btn bottom" data-id="{{_id}}">Pick This Game</button>
+            </div>
             </div>
             </div>
         {{/each}}
@@ -142,7 +162,8 @@
 {{else}}
     <p>No games available yet. Check back soon!</p>
 {{/if}}
-
+</div>
+</div>
 <script src="/js/activities/activities-modals.js"></script>
 <script src="/js/activities/activities-group.js"></script>
 <script src="/js/activities/activities.js"></script>
