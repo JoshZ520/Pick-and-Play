@@ -37,8 +37,12 @@ GET http://localhost:3000/movies
 ###
 GET http://localhost:3000/games
 
+## Previous route kept for comparison
+# ###
+# GET http://localhost:3000/groups/
+
 ###
-GET http://localhost:3000/groups/
+GET http://localhost:3000/api/groups
 
 ###
 GET http://localhost:3000/movies/69cffbe525a04936e35030ce
@@ -49,8 +53,12 @@ GET http://localhost:3000/movies/69cffbe525a04936e35030ce
 ###
 GET http://localhost:3000/games/69d0010f25a04936e35030dd
 
+## Previous route kept for comparison
+# ###
+# GET http://localhost:3000/groups/69d3d54d57e0bf4ab8a099c0
+
 ###
-GET http://localhost:3000/groups/69d3d54d57e0bf4ab8a099c0
+GET http://localhost:3000/api/groups/69d3d54d57e0bf4ab8a099c0
 
 ###
 # POST http://localhost:3000/localhost:3000/users HTTP/1.1
@@ -73,17 +81,27 @@ content-type: application/json
     "imageURL": "3862dbje1"
 }
 
+## Previous route/body kept for comparison
+# ###
+# POST http://localhost:3000/groups HTTP/1.1
+# content-type: application/json
+#
+# {
+#     "groupName": "Batman Team",
+#     "votes": 4,
+#     "winVote": 0,
+#     "createdBy": null,
+#     "groupAdminId": null,
+#     "members": [],
+#     "activities": []
+# }
+
 ###
-POST http://localhost:3000/groups HTTP/1.1
+POST http://localhost:3000/api/groups HTTP/1.1
 content-type: application/json
 
 {
     "groupName": "Batman Team",
-    "votes": 4,
-    "winVote": 0,
-    "createdBy": null,
-    "groupAdminId": null,
-    "members": [],
     "activities": []
 }
 
@@ -133,19 +151,33 @@ PUT http://localhost:3000/games/69d0010f25a04936e35030de
     "imageURL": "jenga.jpg" 
 }
 
-//Need to figure out
+// Previous route kept for comparison (PUT not supported)
+# ###
+# PUT http://localhost:3000/groups/69d41dfd45cb8f2b34a982ea
+#
+# {
+#     "groupName": "Batman Team",
+#     "votes": 5,
+#     "winVote": 0,
+#     "createdBy": null,
+#     "groupAdminId": null,
+#     "members": [],
+#     "activities": []
+# }
+
 ###
-PUT http://localhost:3000/groups/69d41dfd45cb8f2b34a982ea
+PATCH http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea
+content-type: application/json
 
 {
-    "groupName": "Batman Team",
-    "votes": 5,
-    "winVote": 0,
-    "createdBy": null,
-    "groupAdminId": null,
-    "members": [],
-    "activities": []
+    "groupName": "Batman Team - Updated"
 }
+
+### Leave group (self-remove)
+DELETE http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030de
+
+### Admin remove member from group
+DELETE http://localhost:3000/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030df
 
 //Add Id
 ###
@@ -155,8 +187,12 @@ DELETE http://localhost:3000/movies/69d421fe45cb8f2b34a982ec
 # ###
 # DELETE http://localhost:3000/localhost:3000/users/
 
+## Previous route kept for comparison
+# ###
+# DELETE http://localhost:3000/groups/69d4008721773c4724a11293
+
 ###
-DELETE http://localhost:3000/groups/69d4008721773c4724a11293
+DELETE http://localhost:3000/api/groups/69d4008721773c4724a11293
 
 //Add Id
 ###
@@ -182,8 +218,12 @@ GET https://pick-and-play-mic3.onrender.com/movies
 GET https://pick-and-play-mic3.onrender.com/3000/auth/create-test-user
 
 
+## Previous route kept for comparison
+# ###
+# GET https://pick-and-play-mic3.onrender.com/groups 
+
 ###
-GET https://pick-and-play-mic3.onrender.com/groups 
+GET https://pick-and-play-mic3.onrender.com/api/groups
 
 
 ###
@@ -197,9 +237,12 @@ GET https://pick-and-play-mic3.onrender.com/movies/69cffbe525a04936e35030d1
 GET https://pick-and-play-mic3.onrender.com/3000/users/
 
 
-//Check
+// Previous route kept for comparison
+# ###
+# GET https://pick-and-play-mic3.onrender.com/groups/69cef917e06ab30dbfe77bd5
+
 ###
-GET https://pick-and-play-mic3.onrender.com/groups/69cef917e06ab30dbfe77bd5
+GET https://pick-and-play-mic3.onrender.com/api/groups/69cef917e06ab30dbfe77bd5
 
 ###
 GET https://pick-and-play-mic3.onrender.com/games/69d0010f25a04936e35030da
@@ -290,20 +333,34 @@ content-type: application/json
     "imageURL": "ttjns43287"
 }
 
-//Check
+// Previous route/body kept for comparison (PUT not supported)
+# ###
+# PUT https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea HTTP/1.1
+# content-type: application/json
+#
+# {
+#     "groupName": "",
+#     "votes": ,
+#     "winVote": ,
+#     "createdBy": null,
+#     "groupAdminId": null,
+#     "members": [],
+#     "activities": []
+# }
+
 ###
-PUT https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea HTTP/1.1
+PATCH https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea HTTP/1.1
 content-type: application/json
 
 {
-    "groupName": "",
-    "votes": ,
-    "winVote": ,
-    "createdBy": null,
-    "groupAdminId": null,
-    "members": [],
-    "activities": []
+    "groupName": "Wonder Woman Team - Updated"
 }
+
+### Render leave group (self-remove)
+DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030de
+
+### Render admin remove member from group
+DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea/members/69d0010f25a04936e35030df
 
 
 

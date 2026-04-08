@@ -396,6 +396,143 @@ const finishGroupVoting = async (req, res) => {
     }
 };
 
+const updateGroup = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    const allowedFields = ['groupName'];
+    const receivedFields = Object.keys(req.body || {});
+    const disallowedFields = receivedFields.filter((field) => !allowedFields.includes(field));
+
+    if (disallowedFields.length > 0) {
+        return res.status(400).json({
+            error: `Unknown fields: ${disallowedFields.join(', ')}. Allowed fields: ${allowedFields.join(', ')}`
+        });
+    }
+
+    const updatePayload = {};
+
+    if ('groupName' in (req.body || {})) {
+        const groupName = req.body.groupName?.trim?.();
+        if (!groupName) {
+            return res.status(400).json({ error: 'Group name must be a non-empty string' });
+        }
+
+        updatePayload.groupName = groupName;
+    }
+
+    if (!Object.keys(updatePayload).length) {
+        return res.status(400).json({ error: 'No valid fields to update' });
+    }
+
+    try {
+        const result = await getDb().collection('groups').updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: updatePayload }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        return res.status(200).json({
+            message: 'Group updated successfully',
+            updatedFields: updatePayload
+        });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+const removeMemberFromGroup = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ error: 'Must use a valid group id' });
+    }
+
+    if (!ObjectId.isValid(req.params.memberId)) {
+        return res.status(400).json({ error: 'Must use a valid member id' });
+    }
+
+    const groupId = new ObjectId(req.params.id);
+    const memberId = new ObjectId(req.params.memberId);
+    const currentUserId = req.user?._id;
+    const isAppAdmin = req.user?.roleID === 2;
+
+    if (!isAppAdmin && currentUserId?.toString?.() !== memberId.toString()) {
+        return res.status(403).json({
+            error: 'You can only remove yourself from a group. Admins can remove any member.'
+        });
+    }
+
+    try {
+        const group = await getDb().collection('groups').findOne({ _id: groupId });
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const members = Array.isArray(group.members) ? group.members : [];
+        const memberExists = members.some((id) => id?.toString?.() === memberId.toString());
+
+        if (!memberExists) {
+            return res.status(404).json({ error: 'Member not found in this group' });
+        }
+
+        const remainingMembers = members.filter((id) => id?.toString?.() !== memberId.toString());
+        const activities = Array.isArray(group.activities) ? group.activities : [];
+
+        // Remove this member's votes from all activities and recompute voteCount for consistency.
+        const updatedActivities = activities.map((activity) => {
+            const votedUserIds = Array.isArray(activity.votedUserIds)
+                ? activity.votedUserIds.filter((id) => id?.toString?.() !== memberId.toString())
+                : [];
+
+            return {
+                ...activity,
+                votedUserIds,
+                voteCount: votedUserIds.length
+            };
+        });
+
+        const updateData = {
+            members: remainingMembers,
+            activities: updatedActivities
+        };
+
+        if (group.groupAdminId?.toString?.() === memberId.toString()) {
+            updateData.groupAdminId = remainingMembers[0] || null;
+        }
+
+        await getDb().collection('groups').updateOne(
+            { _id: groupId },
+            { $set: updateData }
+        );
+
+        return res.status(200).json({
+            message: 'Member removed from group',
+            removedMemberId: memberId,
+            remainingMemberCount: remainingMembers.length,
+            newGroupAdminId: updateData.groupAdminId ?? group.groupAdminId ?? null
+        });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+// Previous exports kept for comparison
+// module.exports = {
+//     allGroups,
+//     singleGroup,
+//     createGroup,
+//     deleteGroup,
+//     joinGroup,
+//     addActivityToGroup,
+//     removeActivityFromGroup,
+//     voteOnActivity,
+//     finishGroupVoting
+// };
+
 module.exports = {
     allGroups,
     singleGroup,
@@ -405,5 +542,7 @@ module.exports = {
     addActivityToGroup,
     removeActivityFromGroup,
     voteOnActivity,
-    finishGroupVoting
+    finishGroupVoting,
+    updateGroup,
+    removeMemberFromGroup
 };
