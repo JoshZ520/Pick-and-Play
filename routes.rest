@@ -385,10 +385,10 @@ DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d6bc4b8c3404986f4f44
 DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d6bc4b8c3404986f4f4477/members/69d0010f25a04936e35030df
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/movies/69d42586885fa045a9d13b9e
+DELETE https://pick-and-play-mic3.onrender.com/movies/69d6ba4c79d416a632191d77
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d41dfd45cb8f2b34a982ea
+DELETE https://pick-and-play-mic3.onrender.com/api/groups/69d6ba3a79d416a632191d75
 
 ###
-DELETE https://pick-and-play-mic3.onrender.com/games/69d425bd885fa045a9d13b9f
+DELETE https://pick-and-play-mic3.onrender.com/games/69d0010f25a04936e35030de
