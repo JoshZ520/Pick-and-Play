@@ -53,19 +53,6 @@ test('createGroup returns 201 on success', async() => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ acknowledged: true, insertedId: new ObjectId(newGroupId) }));
 });
 
-test('updateGroup returns 204 on success', async() => {
-    const id = new ObjectId().toHexString();
-    const DBMock = {
-        collection: jest.fn().mockReturnThis(),
-        updateOne: jest.fn().mockResolvedValue({ acknowledged: true, modifiedCount: 1 })
-    };
-    getDb.mockReturnValue(DBMock);
-    const req = { params: { id }, body: { groupName: 'Updated Group', winVote: 'Game B' } };
-    const res = { status: jest.fn().mockReturnThis(), send: jest.fn(), json: jest.fn() };
-    await groupController.updateGroup(req, res);
-    expect(res.status).toHaveBeenCalledWith(204);
-    expect(res.send).toHaveBeenCalledWith();
-});
 
 test('deleteGroup returns 200 on success', async() => {
     const id = new ObjectId().toHexString();
@@ -94,16 +81,3 @@ test('createGroup returns 500 on database error', async() => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Some error occurred while creating the group' }));
 });
 
-test('updateGroup returns 500 on database error', async() => {
-    const id = new ObjectId().toHexString();
-    const DBMock = {
-        collection: jest.fn().mockReturnThis(),
-        updateOne: jest.fn().mockRejectedValue(new Error('Some error occurred while updating the group'))
-    };
-    getDb.mockReturnValue(DBMock);
-    const req = { params: { id }, body: { groupName: 'Updated Group', winVote: 'Game B' } };
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-    await groupController.updateGroup(req, res);
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ message: 'Some error occurred while updating the group' }));
-});

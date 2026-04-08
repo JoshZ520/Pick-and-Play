@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test": "jest --coverage",
     "prestart": "npx kill-port 3000 >NUL 2>&1",
     "start": "nodemon server.js",
     "start-prod": "node server.js",
@@ -40,14 +40,11 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@shelf/jest-mongodb": "^6.0.2",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14",
     "swagger-autogen": "^2.23.7"
-  }
-  ,
+  },
   "jest": {
-    "preset": "@shelf/jest-mongodb",
     "testEnvironment": "node"
   }
 }

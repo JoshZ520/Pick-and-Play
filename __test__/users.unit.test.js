@@ -75,14 +75,14 @@ test('login returns 200 with user data on successful login', async () => {
 
 
 test('logout returns 200 on successful logout', async () => {
-    const req = {};
-    req.session = { destroy: jest.fn(cb => cb()) };
-    req.logout = jest.fn(cb => cb());
-    const res = { status: jest.fn().mockReturnThis(), json: jest.fn(), redirect: jest.fn() };
+    const req = {
+        logout: jest.fn(cb => cb()),
+    };
+    const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
     await usersController.logout(req, res);
     expect(req.logout).toHaveBeenCalled();
-    expect(req.session.destroy).toHaveBeenCalled();
-    expect(res.redirect).toHaveBeenCalledWith('/');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Logout successful' });
 });
 
 test('getCurrentUser returns 200 with user data if authenticated', async () => {
