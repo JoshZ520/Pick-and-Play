@@ -1,8 +1,61 @@
 .movies-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.groups-grid {
+    /* display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    flex: 1 1 300px; */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 20px;
     padding: 20px;
+}
+/* .group-header {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+.group-header p {
+    justify-self: end;
+}
+.group-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+} */
+
+.group-card {
+    display: flex;
+    flex-direction: column;
+    /* flex: 1 1 300px; */
+    /* min-height: 100%;
+    width: 100%; */
+    /* height: auto; */
+    
+}
+.left  button.add-activity-btn, button.join-group-btn, button.vote-activity-btn {
+    /* margin-top: auto; */
+    /* justify-content: flex-end; */
+    /* position: absolute;
+    right: 0;
+    bottom: 0; */
+    /* position: sticky;
+    bottom: 0; */
+    
+}
+/* .left {
+    display: flex;
+    flex-direction: column;
+} */
+
+.act-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
 .movie-card,
@@ -15,13 +68,52 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.group-card h3 {
+    margin-top: 0;
+    font-size: 2rem;
+}
+
 .game-card {
     margin-top: 12px;
     display: flex;
+    flex-direction: column;
+}
+
+
+.game-card h2 {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.games {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.games h2 {
+    margin-bottom: 0rem;
+}
+
+.games p {
+    grid-column-start:1;
+    grid-column-end: 3;
+    /* margin-top: 0.5rem;
+    margin-bottom: 1rem; */
+}
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    margin-top: -1.3rem; 
+}
+
+.game-info button.bottom {
+    margin-top: auto;
 }
 
 .game-info {
-    padding-left: 20px;
+    /* padding-left: 20px; */
     display: flex;
     flex-direction: column;
 }
@@ -33,14 +125,21 @@
     border-radius: 4px;
 }
 
-.game-image, .game-info {
+/* .game-image, .game-info {
     justify-content: center;
     width: 300px;
+} */
+
+.movie-card {
+    display: flex;
+    flex-direction: column; 
 }
+
 
 .movie-card h2 {
     margin-top: 10px;
     font-size: 1.2em;
+    font-weight: bold;
 }
 
 .movie-card p {
@@ -50,7 +149,15 @@
 .my-groups,
 .groups,
 .games,
-.admin-group-create {
+.admin-group-create{
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+.movie-container{
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -103,9 +210,9 @@
     font-weight: 600;
 }
 
-.group-activities {
+/* .group-activities {
     margin-top: 12px;
-}
+} */
 
 .group-activities-list {
     margin: 8px 0 0;
@@ -153,7 +260,9 @@
     padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    margin-top: auto;
+    margin-bottom: 10px;
 }
 
 .pick-btn:hover {
@@ -165,12 +274,22 @@
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 6px 10px;
+    padding: 2px 5px;
     cursor: pointer;
+    margin: none;
 }
 
+/* .remove-activity-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+} */
+
 .vote-activity-btn,
-.finish-group-btn {
+.finish-group-btn, .register-btn, .login-btn {
     background-color: #537A5A;
     color: white;
     border: none;
@@ -201,4 +320,86 @@
 
 #create-group-feedback {
     font-weight: 600;
+}
+
+.dashboard-container {
+    /* background-color: #ee6e7237; */
+    border-radius: .5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.349);
+    padding: 1rem 2rem;
+    /* max-width: auto;
+    width: 40%; */
+    margin: 1.5rem 0rem 1.5rem 1.5rem;
+    /* display: grid;
+    gap: 20px; */
+}
+
+.admin-section, .register-section, .login-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px 16px 2rem 16px;
+    margin: 16px 1.5rem 2rem ;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.349);
+}
+
+ul.password-requirements {
+    list-style: none;
+    /* padding-left: 0;
+    margin-top: 8px; */
+    font-style: italic;
+}
+
+#logout-btn {
+    display: block;
+    /* margin-left: auto; */
+    margin-left: 1.7rem;
+    margin-bottom: 1rem;
+}
+
+.register-google {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.home-page {
+    display: block;
+    padding: 1rem 2rem;
+    background-color: #82a0c410;
+    border-radius: .2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.349);
+    margin: 1rem auto 1rem auto;
+}
+
+.team {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+@media only screen and (max-width: 1080px) {
+    .games {
+    display: flex;
+    flex-direction: column;
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px; */
+}
+
+    .games-grid {
+    
+    display: flex;
+    flex-direction: column;
+     
+}
+}
+
+@media only screen and (max-width: 720px) {
+    .act-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .groups-grid {
+        display: flex;
+        flex-direction: column;
+    }
 }
