@@ -128,7 +128,61 @@ router.post('/:id/finish',
 	*/
 	isAdmin, groupController.finishGroupVoting);
 
-//Delete group
+// Update group metadata (currently groupName only)
+router.patch('/:id',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Update group metadata (admin only). Currently supports groupName.'
+	#swagger.parameters['id'] = {
+		in: 'path',
+		description: 'Group id',
+		required: true,
+		type: 'string'
+	}
+	#swagger.parameters['body'] = {
+		in: 'body',
+		description: 'Allowed update payload',
+		required: true,
+		schema: {
+			groupName: 'Updated Group Name'
+		}
+	}
+	#swagger.responses[200] = { description: 'Group updated successfully' }
+	#swagger.responses[400] = { description: 'Invalid group id or payload' }
+	#swagger.responses[403] = { description: 'Admin only' }
+	#swagger.responses[404] = { description: 'Group not found' }
+	*/
+	isAdmin,
+	groupController.updateGroup
+);
+
+// Remove a group member (admin removes anyone, user can remove self)
+router.delete('/:id/members/:memberId',
+	/*
+	#swagger.tags = ['Groups']
+	#swagger.description = 'Remove a member from a group. Admin can remove any member. Non-admin can only remove self.'
+	#swagger.parameters['id'] = {
+		in: 'path',
+		description: 'Group id',
+		required: true,
+		type: 'string'
+	}
+	#swagger.parameters['memberId'] = {
+		in: 'path',
+		description: 'Member id to remove',
+		required: true,
+		type: 'string'
+	}
+	#swagger.responses[200] = { description: 'Member removed from group' }
+	#swagger.responses[400] = { description: 'Invalid group id or member id' }
+	#swagger.responses[403] = { description: 'Not allowed to remove this member' }
+	#swagger.responses[404] = { description: 'Group or member not found' }
+	*/
+	isAuthenticated,
+	groupController.removeMemberFromGroup
+);
+
+// Delete group
 router.delete('/:id',
 	/*
 	#swagger.tags = ['Groups']

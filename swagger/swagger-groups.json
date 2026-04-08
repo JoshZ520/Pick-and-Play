@@ -87,6 +87,56 @@
       }
     },
     "/api/groups/{id}": {
+      "patch": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Update group metadata (admin only). Currently supports groupName.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Group id"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Allowed update payload",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "groupName": {
+                  "type": "string",
+                  "example": "Updated Group Name"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group updated successfully"
+          },
+          "400": {
+            "description": "Invalid group id or payload"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Admin only"
+          },
+          "404": {
+            "description": "Group not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Groups"
@@ -336,6 +386,47 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups/{id}/members/{memberId}": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "description": "Remove a member from a group. Admin can remove any member. Non-admin can only remove self.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Group id"
+          },
+          {
+            "name": "memberId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Member id to remove"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Member removed from group"
+          },
+          "400": {
+            "description": "Invalid group id or member id"
+          },
+          "403": {
+            "description": "Not allowed to remove this member"
+          },
+          "404": {
+            "description": "Group or member not found"
           },
           "500": {
             "description": "Internal Server Error"
